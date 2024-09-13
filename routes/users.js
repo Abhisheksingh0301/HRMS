@@ -335,29 +335,29 @@ router.post('/summaryrpt', (req, res) => {
 });
 
 //Login Post Form
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   const logindata = {
     emp_name: req.body.txtuser,
     password: req.body.txtpwd
   }
-  LogModel.find({ emp_name: req.body.txtuser }).count(function (err, result) {
-    if (err) {
-      console.log(err);
-    } else {
-
-    }
-  });
+  LogModel.find({ emp_name: req.body.txtuser, password: req.body.password })
+  if (err) {
+    console.log(err);
+  } else {
+    req.session.userId = req.body.txtuser;
+  }
 });
+
 
 //Signup get method
 router.get('/signup', (req, res) => {
   EmpMstModel.find(function (err, empdata) {
-    if(err) {
+    if (err) {
       console.log(err);
     } else {
-      res.render('signup',{title:"Signup", empdata:empdata});
-    } 
-});
+      res.render('signup', { title: "Signup", empdata: empdata });
+    }
+  });
 })
 
 
@@ -381,7 +381,7 @@ router.post('/signup', (req, res) => {
             console.log('error', err);
           } else {
             console.log(LogData);
-            res.render('login',{title:"Login Page"});
+            res.render('login', { title: "Login Page" });
           }
         })
       }
