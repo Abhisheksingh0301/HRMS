@@ -1,0 +1,45 @@
+<title>
+    <%= title %>
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+<%- include('header'); -%>
+    <section class="featured">
+        <div class="content-wrapper">
+            <h1 id="myHeader" class="text-4xl">
+                <%= title %>
+            </h1>
+        </div>
+    </section>
+    <div class="max-w-fit md:py-[80] py-5 flex mx-4 sm:flex-row flex-col bg-yellow-200 justify-around rounded-lg">
+        <div class="basis-[30%] pb-5 mx-auto my-2 overflow-hidden px-10">
+            <img src="/images/hrm-banner.jpg" alt="No image !!!!"
+                class=" w-80 rounded-lg h-80 hover:scale-125 duration-1000">
+        </div>
+        <div class="basis-[70%] my-2 mx-10">
+            <p class="py-1 text-justify font-semibold font-serif text-teal-800">
+                An Attendance Management System (AMS) is integral to managing leaves within a Human Resource Management
+                System (HRMS). It efficiently tracks employee attendance, including various types of leave such as
+                casual leave, summer recess, etc.
+            </p>
+            <p class="py-3 text-justify font-semibold font-serif text-teal-800">
+                The system maintains a comprehensive record of leave balances and history, ensuring that employees are
+                aware of their available leave entitlements and helping admins to enforce leave policies.
+            </p>
+            <p class="py-3 text-justify font-semibold font-serif text-teal-800">
+                Additionally, the AMS provides real-time reporting and analytics, which helps admins to monitor
+                leave patterns, identify potential issues, and plan for staffing needs. This data-driven approach
+                facilitates better workforce management and strategic planning. Overall, an AMS streamlines leave
+                management processes, enhances transparency, and supports compliance with organizational policies and
+                contributing to a more efficient and organized HR function.
+            </p>
+        </div>
+    </div>
+
+
+    <%- include('footer'); -%>

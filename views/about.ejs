@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+
+<%- include('header'); -%>
+    <title>
+        <%= title %>
+    </title>
+    <div class="bg-cover bg-center h-screen" style="background-image: url('images/aboutbackground.jpg');height:auto;width: auto;">
+
+        <div class="flex flex-col h-2/3 justify-center items-center m-auto">
+            <div
+                class="sm:bg-orange-200 bg-pink-200 text-4xl w-full sm:w-[80%] mx-4 py-3 text-center opacity-90 text-green-900 rounded-t ">
+                About page </div>
+            <div
+                class="w-full sm:w-[80%] md:py-[70] flex opacity-90  md:flex-row flex-col bg-zinc-100 min-h-[40%]  items-center rounded-lg">
+                <div class="basis-[65%] m-8">
+                    <div class="font-serif text-4xl text-teal-950">I am a designer.</div>
+                    <div class="font-serif text-xl text-teal-800"> This website is developed by node.js, html5 &
+                        talewind css only.</div><br><br>
+                    <ul>
+                        <li class="font-serif text-xl text-orange-800 sm:text-3xl"> Abhishek Kumar Singh</li>
+                        <li class="font-serif text-xl sm:text-xl  text-sky-700"><a
+                                href="https://www.facebook.com/iamabhishekkumarsingh" target="_blank">View profile.</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="basis-[35%] pb-5 overflow-hidden px-10">
+                    <img src="/images/aboutpage.jpg" alt="No image !!!!" class=" w-64 h-64 md:h-80 md:w-80">
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('footer'); -%>

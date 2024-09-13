@@ -1,0 +1,59 @@
+<title>
+    <%= title %>
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+
+
+<%- include('header'); -%>
+    <section class="featured">
+        <div class="content-wrapper">
+            <h1 id="myHeader" class="text-4xl">
+                <%= title %>
+            </h1>
+        </div>
+    </section>
+    <div class="h-2/3 flex flex-col items-center justify-center m-auto">
+        <% if(lvlist.length>0){ %>
+            <table class="table-auto border">
+                <thead>
+                    <tr>
+                        <th>Leave abb</th>
+                        <th>Leave desc</th>
+                        <th>Alloted</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable bg-sky-200">
+
+                    <% for (var i=0; i<lvlist.length; i++){ %>
+                        <tr class="hover:bg-sky-200">
+                            <td>
+                                <%= lvlist[i].leave_abb %>
+                            </td>
+                            <td>
+                                <%= lvlist[i].leave_desc %>
+                            </td>
+                            <td>
+                                <%= lvlist[i].leave_alloted %>
+                            </td>
+                            <td>
+                                <%= lvlist[i].remarks %>
+                            </td>
+                        </tr>
+                        <% } %>
+
+                </tbody>
+                <tr>
+                    <td colspan="4"> <a href="./leaves" class="bg-blue-400 hover:bg-blue-600 px-3 py-3 rounded-lg">Add
+                            new records</a></td>
+                </tr>
+            </table>
+            <% } else { %>
+                <h3 style="font:bold;color: darkred;font-family: monospace;">No records found</h3>
+                <% } %>
+
+    </div>
+    <%- include('footer'); -%>

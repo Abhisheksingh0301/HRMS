@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            color: #333;
+        }
+
+        .report-container {
+            max-width: 800px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .report-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .report-header p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="report-container">
+        <div class="report-header">
+            <h1>
+                <%= title %>
+            </h1>
+            <p>Employee Name: <%= data[0].emp_name %>
+            </p>
+            <p> Department: <%= dept %>
+            </p>
+            <p>Report Period:<%= moment(stdate).format("DD-MMM-YYYY") %> to <%= moment(enddate).format("DD-MMM-YYYY") %>
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Leave category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i=0; i<data.length; i++){ %>
+                    <tr>
+                        <td>
+                            <%= moment(data[i].leave_date).format("dddd, MMMM Do YYYY") %>
+                        </td>
+                        <td>
+                            <%= data[i].Leave.leave_desc %>
+                        </td>
+                    </tr>
+
+                    <!-- Add more rows as needed -->
+                    <% } %>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p><b>Total number of leaves :: <%= totalRecords %></b></p>
+            <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %>
+            </p>
+            <p class="no-print">Print this report by using the print function in your browser.</p>
+        </div>
+    </div>
+</body>
+
+</html>

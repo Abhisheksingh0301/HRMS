@@ -1,0 +1,47 @@
+<title>
+    <%= title %>
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+
+
+<%- include('header'); -%>
+    <section class="featured">
+        <div class="content-wrapper">
+            <h1 id="myHeader" class="text-4xl">
+                <%= title %>
+            </h1>
+        </div>
+    </section>
+    <div class=" h-2/3 flex flex-col items-center justify-center m-auto">
+        <form action="/edit-empl/" method="POST"
+            class="bg-slate-300 flex flex-col items-center justify-center w-full sm:w-[80%] mx-4 rounded-lg">
+            <p class="text-green-700 text-2xl font-serif">
+                Update employee details
+            </p>
+            <input type="hidden" name="id" value="<%= empdata._id %>">
+            <input aria-label="Enter employee name" type="text" name="empname" placeholder="Employee name" required
+                autocomplete="off" readonly value="<%= empdata.emp_name %>"
+                class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2" />
+            <input aria-label="Enter joining year" type="number" min="2006" name="joinyr" placeholder="Joining year"
+                value="<%= empdata.year_of_joining %>"
+                class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4 h-2 border border-gray-200  rounded mb-2" />
+            <select name="cmbGender" id="cmbGender" required
+                class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
+                <option value="Male" <% if(empdata.gender=="Male" ){ %> selected <% } %>>
+                        Male</option>
+                <option value="Female" <% if(empdata.gender=="Female" ){ %> selected <% } %>>
+                        Female</option>
+            </select>
+            <input aria-label="Enter remarks" type="text" name="rmrk" placeholder="Remarks (if any)" autocomplete="off"
+                value="<%= empdata.remarks %>"
+                class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
+
+            <button type="submit" class="bg-blue-400 py-3 w-3/4 mb-4 hover:bg-blue-600">
+                Update
+            </button>
+        </form>
+    </div>
+    <%- include('footer'); -%>

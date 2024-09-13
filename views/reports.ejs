@@ -1,0 +1,33 @@
+<title>
+    <%= title %>
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+<%- include('header'); -%>
+    <section class="featured">
+        <div class="content-wrapper">
+            <h1 id="myHeader" class="text-4xl">
+                <%= title %>
+            </h1>
+        </div>
+    </section>
+    <div class="flex flex-col  items-center justify-center my-5">
+        <div
+            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[80%] mx-4 rounded-lg m-auto">
+            <a href="/dailyreport">
+                <figure>
+                    <img src="/images/daily-report.jpg" alt="No image" class="w-80 h-80 rounded-full">
+                    <figcaption class="grid justify-items-center text-xl hover:decoration-red-700 font-serif hover:underline">Individual attendance report</figcaption>
+                </figure>
+            </a>
+            <a href="/summaryreport">
+                <figure>
+                    <img src="/images/monthly-report.jpg" alt="No image" class="w-80 h-80 rounded-full">
+                    <figcaption class="grid justify-items-center text-xl hover:decoration-red-700 font-serif hover:underline">Summarised attendance report</figcaption>
+                </figure>
+            </a>
+        </div>
+    </div>
+    <%- include('footer'); -%>
