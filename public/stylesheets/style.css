@@ -27,11 +27,15 @@ body {
 }
 input[type=text]:focus {
   background-color: #eaeec9;
-  padding: 8px 15px;
+  /* padding: 8px 15px; */
+}
+input[type=password]:focus {
+  background-color: #e6c8f5;
+  /* padding: 8px 15px; */
 }
 input[type=number]:focus {
   background-color: #b3f1e2;
-  padding: 8px 15px;
+  /* padding: 8px 15px; */
 }
 footer {
   text-align: center;

@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose=require('mongoose');
+var session = require('express-session');
 // var dateFormat = require('dateformat');
 
 
@@ -36,7 +37,12 @@ mongoose.connect(process.env.CONNECTION_STR,{
  //.catch((err)=>console.error );
  .catch((err)=>console.log('Connection error') );
  
-
+// Session setup added on 13-09-24
+app.use(session({
+  secret: 'singhisking', // Replace with a secure secret key
+  resave: false,
+  saveUninitialized: true
+}));
 
 
 app.use('/index', indexRouter);

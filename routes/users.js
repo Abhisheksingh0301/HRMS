@@ -6,6 +6,7 @@ var EmpMstModel = require("../schema/emp_master");
 var LeaveMstModel = require("../schema/leave_master");
 var HolidayMstModel = require("../schema/holiday_master");
 var AttendanceModel = require("../schema/attendance");
+var LogModel = require("../schema/login");
 var moment = require('moment');
 var climate = require('city-weather');
 const { ObjectId } = require("mongodb");
@@ -17,6 +18,7 @@ const { url } = require("inspector");
 const { stat } = require("fs");
 var router = express.Router();
 var ObjectID = require('mongodb').ObjectID;
+var authMiddleware = require("../routes/middleware/auth");  //added on 13-9-24
 
 // var pssm = PassoutModel.find({});
 // var trn = TranscriptModel.find({});
@@ -26,7 +28,7 @@ router.get("/", function (req, res, next) {
 });
 
 //Get Employees page
-router.get("/employees", function (req, res, next) {
+router.get("/employees", authMiddleware, function (req, res, next) {
   res.render("employees", { title: "Employees page" })
 });
 //Add new employee
@@ -330,6 +332,62 @@ router.post('/summaryrpt', (req, res) => {
       });
     }
   });
+});
+
+//Login Post Form
+router.post('/login', (req, res) => {
+  const logindata = {
+    emp_name: req.body.txtuser,
+    password: req.body.txtpwd
+  }
+  LogModel.find({ emp_name: req.body.txtuser }).count(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+
+    }
+  });
+});
+
+//Signup get method
+router.get('/signup', (req, res) => {
+  EmpMstModel.find(function (err, empdata) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.render('signup',{title:"Signup", empdata:empdata});
+    } 
+});
+})
+
+
+//Signup post form
+router.post('/signup', (req, res) => {
+  LogModel.find({ emp_name: req.body.empname }).count(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result > 0) {
+        console.log("Duplicate name");
+        res.render('hi', { title: "Duplicate name" });
+      } else {
+        const logindata = {
+          emp_name: req.body.empname,
+          password: req.body.txtpwd
+        }
+        var LogData = LogModel(logindata);
+        LogData.save(function (err) {
+          if (err) {
+            console.log('error', err);
+          } else {
+            console.log(LogData);
+            res.render('login',{title:"Login Page"});
+          }
+        })
+      }
+    }
+
+  })
 });
 
 // router.get("/", function (req, res, next) {

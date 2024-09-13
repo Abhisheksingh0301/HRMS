@@ -1,0 +1,29 @@
+<title>
+    <%= title %>
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
+<%- include('header'); -%>
+    <section class="featured">
+        <div class="content-wrapper">
+            <h1 id="myHeader" class="text-4xl">
+                <%= title %>
+            </h1>
+        </div>
+    </section>
+    <div class="flex flex-col  items-center justify-center my-5">
+        <form action="/login" method="post"
+            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[60%] mx-4 rounded-lg m-auto">
+            <label for="username" class="font-serif">Username:</label>
+            <input type="text" id="txtuser" name="txtuser" required autocomplete="off"
+                class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2">
+            <label for="password" class="font-serif">Password:</label>
+            <input type="password" id="txtpwd" name="txtpwd" required
+                class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2">
+            <button type="submit" class="bg-green-500 text-sm py-2 w-3/4 font-serif hover:bg-green-600 rounded-lg">Login</button>
+        </form>
+        <p class="text-gray-800 text-sm"> Don't have an account..<a href="/signup" class="hover:underline">Click to SignUp</a></p>
+    </div>
+    <%- include('footer'); -%>
