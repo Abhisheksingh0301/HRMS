@@ -13,10 +13,10 @@
             </h1>
         </div>
     </section>
-    <div class="flex flex-col  items-center justify-center my-5">
+    <div class="flex flex-col  items-center justify-center my-5 bg-red-300">
         <form action="/signup" method="post"
             class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[60%] mx-4 rounded-lg m-auto">
-            <label for="username" class="font-serif">Username:</label>
+            <label for="empname" class="font-serif">Username:</label>
             <select id="empname" name="empname" class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
                 <option value="0"> Select name</option>
                 <% for (var i=0; i<empdata.length; i++){ %>
@@ -25,7 +25,7 @@
                     </option>
                     <% } %>
             </select>
-            <label for="password" class="font-serif">Password:</label>
+            <label for="txtpwd" class="font-serif">Password:</label>
             <input type="password" id="txtpwd" name="txtpwd" required
                 class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2">
             <button type="submit" class="bg-green-500 text-sm py-2 w-3/4 font-serif hover:bg-green-600 rounded-lg">Signup</button>

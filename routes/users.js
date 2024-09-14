@@ -405,7 +405,7 @@ router.get('/signup', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('signup', { title: "Signup", empdata: empdata, userId: req.session.userId});
+      res.render('signup', { title: "Signup page", empdata: empdata, userId: req.session.userId});
     }
   });
 })
