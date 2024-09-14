@@ -23,12 +23,12 @@ var authMiddleware = require("../routes/middleware/auth");  //added on 13-9-24
 // var pssm = PassoutModel.find({});
 // var trn = TranscriptModel.find({});
 /* GET index page */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Introduction page" })
+router.get("/", authMiddleware, function (req, res, next) {
+  res.render("index", { title: "Introduction page", userId: req.session.userId });
 });
 
 //Get Employees page
-router.get("/employees", authMiddleware, function (req, res, next) {
+router.get("/employees", function (req, res, next) {
   res.render("employees", { title: "Employees page" })
 });
 //Add new employee
@@ -41,7 +41,7 @@ router.post("/addemp/", (req, res) => {
     console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
-      res.render("hi", { title: "Duplicate record" })
+      res.render("hi", { title: "Duplicate record", userId:req.session.userId })
     } else {
       const empData = {
         emp_name: rest,
@@ -64,12 +64,12 @@ router.post("/addemp/", (req, res) => {
 });
 
 //DISPLAY LIST OF EMPLOYEES
-router.get('/emplist', function (req, res) {
+router.get('/emplist', authMiddleware, function (req, res) {
   EmpMstModel.find(function (err, employeelist) {
     if (err) {
       console.log(err);
     } else {
-      res.render('emplist', { employeelist: employeelist, title: "Employees list" })
+      res.render('emplist', { employeelist: employeelist, title: "Employees list", userId: req.session.userId })
     }
   }).sort({ "emp_name": 1 });
 });
@@ -87,7 +87,7 @@ router.post("/addlv/", (req, res) => {
     console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
-      res.render("hi", { title: "Duplicate record" })
+      res.render("hi", { title: "Duplicate record", userId: req.session.userId })
     } else {
       const lvData = {
         leave_abb: (req.body.lvabb).toUpperCase(),
@@ -110,18 +110,18 @@ router.post("/addlv/", (req, res) => {
 });
 
 //DISPLAY LEAVES CATEGORY
-router.get('/leavetype', function (req, res) {
+router.get('/leavetype', authMiddleware, function (req, res) {
   LeaveMstModel.find(function (err, lvlist) {
     if (err) {
       console.log(err);
     } else {
-      res.render('leavetype', { lvlist: lvlist, title: "Leaves category" })
+      res.render('leavetype', { lvlist: lvlist, title: "Leaves category", userId: req.session.userId });
     }
   }).sort({ "leave_abb": 1 });
 });
 
 //EDIT EMPLOYEES
-router.get('/edit-empl/:id', function (req, res, next) {
+router.get('/edit-empl/:id', authMiddleware, function (req, res, next) {
   var id = req.params.id;
   console.log(id);
   var edit = EmpMstModel.findById(id);
@@ -130,7 +130,7 @@ router.get('/edit-empl/:id', function (req, res, next) {
       throw err;
     } else {
       console.log(data);
-      res.render('edit-empl', { empdata: data, title: "Edit Employee" });
+      res.render('edit-empl', { empdata: data, title: "Edit Employee", userId: req.session.userId });
     }
 
   })
@@ -155,7 +155,7 @@ router.post("/edit-empl", (req, res) => {
   });
 });
 //Leave entry
-router.get("/attendance_entry", (req, res) => {
+router.get("/attendance_entry", authMiddleware, (req, res) => {
   EmpMstModel.find(function (err, empdata) {
     if (err) {
       console.log('Error');
@@ -164,7 +164,7 @@ router.get("/attendance_entry", (req, res) => {
         if (err1) {
           console.log(err1);
         } else {
-          res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: "", moment: moment });
+          res.render('attendance_entry', { title: "Attendance entry", userId: req.session.userId, leavedata: leavedata, empdata: empdata, attData: "", moment: moment });
         }
       })
     }
@@ -179,7 +179,7 @@ router.post("/addatt/", (req, res) => {
     console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
-      res.render("hi", { title: "Duplicate record" })
+      res.render("hi", { title: "Duplicate record", userId: req.session.userId })
     } else {
       const lvdt = moment(req.body.dt).format('dddd');
       if (lvdt == 'Sunday') {
@@ -220,7 +220,7 @@ router.post("/addatt/", (req, res) => {
 //Access report page
 router.get('/reports', (req, res) => {
 
-  res.render('reports', { title: "Report page" });
+  res.render('reports', { title: "Report page", userId: req.session.userId});
 });
 
 //Daily attendance report
@@ -231,7 +231,10 @@ router.get('/dailyreport', (req, res) => {
     } else {
       const yr = moment().year();
       console.log(yr);
-      res.render('dailyreport', { title: "Individual attendance report", empdata: empdata, moment: moment, year: yr });
+      res.render('dailyreport', {
+        title: "Individual attendance report", empdata: empdata, moment: moment, year: yr,
+        userId: req.session.userId
+      });
     }
   })
 });
@@ -262,7 +265,8 @@ router.post('/individualrpt', (req, res) => {
     } else {
       const cnt = data.length;
       res.render('individualreport', {
-        title: "Employee Attendance Report",
+        heading: "Employee Attendance Report",
+        title: empname,
         data: data,
         dept: "COE Office",
         moment: moment,
@@ -277,14 +281,14 @@ router.post('/individualrpt', (req, res) => {
 
 
 //Summary Report :: Get method
-router.get('/summaryreport', (req, res) => {
+router.get('/summaryreport', authMiddleware, (req, res) => {
   EmpMstModel.find(function (err, empdata) {
     if (err) {
       console.log(err);
     } else {
       const yr = moment().year();
       console.log(yr);
-      res.render('summaryreport', { title: "Summarised attendance report", empdata: empdata, moment: moment, year: yr });
+      res.render('summaryreport', { title: "Summarised attendance report", empdata: empdata, moment: moment, year: yr, userId:req.session.userId });
     }
   })
 });
@@ -309,20 +313,59 @@ router.post('/summaryrpt', (req, res) => {
     },
     {
       $group: {
-        _id: "$emp_name", // Group by employee name
+        _id: {
+          emp_name: "$emp_name",
+          leave_type: "$Leave.leave_desc"
+        },
         totalLeaves: { $sum: 1 } // Count the number of leaves for each employee
       }
     },
-    { $sort: { "_id": 1 } }
+    { $sort: { "_id.emp_name": 1, "_id.leave_type": 1 } }
   ], function (err, data) {
     if (err) {
       console.log("Error:", err);
     } else {
-      console.log(data);
+
+
+      // Transform the data into the desired format
+      const pivotTable = data.reduce((acc, record) => {
+        const { emp_name, leave_type } = record._id;
+        const totalLeaves = record.totalLeaves;
+
+        if (!acc[emp_name]) {
+          acc[emp_name] = { emp_name };
+        }
+
+        // Set the leave type and total leaves dynamically
+        acc[emp_name][`${leave_type}_total_leaves`] = totalLeaves;
+
+        return acc;
+      }, {});
+
+      // Convert the object to an array of values
+      const pivotTableArray = Object.values(pivotTable);
+
+      // Determine unique leave types from the data
+      const leaveTypes = [...new Set(data.map(record => record._id.leave_type))];
+
+      // Ensure each row has columns for all leave types with a default value of 0
+      const formattedPivotTable = pivotTableArray.map(row => {
+        const formattedRow = { emp_name: row.emp_name };
+
+        leaveTypes.forEach(leaveType => {
+          formattedRow[`${leaveType}_total_leaves`] = row[`${leaveType}_total_leaves`] || 0;
+        });
+
+        return formattedRow;
+      });
+
+      console.log(formattedPivotTable);
+
+      // console.log(data);
       const cnt = data.length;
       res.render('summreport', {
         title: "Summarised Attendance Report",
-        data: data,
+        data: formattedPivotTable,
         dept: "COE Office",
         moment: moment,
         stdate: stdate,
@@ -340,12 +383,19 @@ router.post('/login', (req, res, next) => {
     emp_name: req.body.txtuser,
     password: req.body.txtpwd
   }
-  LogModel.find({ emp_name: req.body.txtuser, password: req.body.password })
-  if (err) {
-    console.log(err);
-  } else {
+  LogModel.find({ emp_name: req.body.txtuser, password: req.body.password }, (err, user) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).render("hi", { title: "Invalid credentials" });
+    }
     req.session.userId = req.body.txtuser;
+    console.log(req.session.userId);
+    res.render("index", { title: "Introduction page", userId: req.session.userId });
   }
+  )
 });
 
 
@@ -355,7 +405,7 @@ router.get('/signup', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('signup', { title: "Signup", empdata: empdata });
+      res.render('signup', { title: "Signup", empdata: empdata, userId: req.session.userId});
     }
   });
 })
@@ -369,7 +419,7 @@ router.post('/signup', (req, res) => {
     } else {
       if (result > 0) {
         console.log("Duplicate name");
-        res.render('hi', { title: "Duplicate name" });
+        res.render('hi', { title: "Duplicate name", userId: req.session.userId});
       } else {
         const logindata = {
           emp_name: req.body.empname,
@@ -381,13 +431,22 @@ router.post('/signup', (req, res) => {
             console.log('error', err);
           } else {
             console.log(LogData);
-            res.render('login', { title: "Login Page" });
+            res.render('login', { title: "Login Page", userId: req.session.userId });
           }
         })
       }
     }
 
   })
+});
+//Logout 
+router.get('/logout', function (req, res, next) {
+  req.session.destroy(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
 });
 
 // router.get("/", function (req, res, next) {
@@ -810,8 +869,7 @@ router.post('/signup', (req, res) => {
 // });
 //ABOUT PAGE
 router.get('/about', (req, res) => {
-
-  res.render('about', { title: "This is about page" });
+  res.render('about', { title: "This is about page", userId: req.session.userId });
 });
 // /* DELETE RECORDS FROM TRANSCRIPT TABLE*/
 // router.get('/deleterecord/:id', function (req, res) {
@@ -843,70 +901,70 @@ router.get('/about', (req, res) => {
 
 // });
 
-router.get('/utilities', (req, res) => {
-  res.render('utilities', { maxtemp: "", mintemp: "", actualtemp: "", description: "", city: "", title: "Welcome to Weather Report Page" })
-});
-router.post('/utilities', (req, res) => {
-  var city = req.body.txttown;
-  console.log(city);
-  climate.getMaximumTemp(city, function (maxtemp) {
-    console.log("Maximum temperature: " + maxtemp);
-    climate.getClimateDescription(city, function (description) {
-      console.log("Climate description: " + description);
-      climate.getActualTemp(city, function (actualtemp) {
-        console.log("Actual temperature: " + actualtemp);
-        climate.getMinimumTemp(city, function (mintemp) {
-          console.log("Minimum temperature: " + mintemp);
-          res.render('utilities', {
-            maxtemp: maxtemp, mintemp: mintemp, actualtemp: actualtemp, description: description,
-            city: city, title: "Welcome to Weather Report Page"
-          })
-        });
-      });
-    });
-  });
+// router.get('/utilities', (req, res) => {
+//   res.render('utilities', { maxtemp: "", mintemp: "", actualtemp: "", description: "", city: "", title: "Welcome to Weather Report Page" })
+// });
+// router.post('/utilities', (req, res) => {
+//   var city = req.body.txttown;
+//   console.log(city);
+//   climate.getMaximumTemp(city, function (maxtemp) {
+//     console.log("Maximum temperature: " + maxtemp);
+//     climate.getClimateDescription(city, function (description) {
+//       console.log("Climate description: " + description);
+//       climate.getActualTemp(city, function (actualtemp) {
+//         console.log("Actual temperature: " + actualtemp);
+//         climate.getMinimumTemp(city, function (mintemp) {
+//           console.log("Minimum temperature: " + mintemp);
+//           res.render('utilities', {
+//             maxtemp: maxtemp, mintemp: mintemp, actualtemp: actualtemp, description: description,
+//             city: city, title: "Welcome to Weather Report Page"
+//           })
+//         });
+//       });
+//     });
+//   });
 
-});
+// });
 
 /*TO GET ADDRESS FROM PIN CODE */
-router.get('/pincode', (req, res) => {
-  res.render('pincode', { postoffice: "", city: "", state: "", pincode: "", country: "", title: "Search address by pin code" });
-});
-router.post('/pincode', (req, res) => {
-  const pin = req.body.txtpin;
-  console.log(pin);
-  const request = require('request');
-  request({
-    url: "https://api.postalpincode.in/pincode/" + pin,
-    // var reqUrl="https://jsonplaceholder.typicode.com/posts";
-    json: true
+// router.get('/pincode', (req, res) => {
+//   res.render('pincode', { postoffice: "", city: "", state: "", pincode: "", country: "", title: "Search address by pin code" });
+// });
+// router.post('/pincode', (req, res) => {
+//   const pin = req.body.txtpin;
+//   console.log(pin);
+//   const request = require('request');
+//   request({
+//     url: "https://api.postalpincode.in/pincode/" + pin,
+//     // var reqUrl="https://jsonplaceholder.typicode.com/posts";
+//     json: true
 
-    //**al9103674
-  }, (err, response, body) => {
-    var finduser = body.find(user => body, undefined, 4);
-    //console.log(JSON.parse(body,undefined,4))
-    //console.log(JSON.stringify(finduser.PostOffice[0].Name));
-    if (JSON.parse(JSON.stringify(finduser.Message != "No records found"))) {
-      var Postoffice = JSON.parse(JSON.stringify(finduser.PostOffice[0].Name));
-      var District = JSON.parse(JSON.stringify(finduser.PostOffice[0].District));
-      var State = JSON.parse(JSON.stringify(finduser.PostOffice[0].State));
-      var Country = JSON.parse(JSON.stringify(finduser.PostOffice[0].Country));
-      var Pincode = JSON.parse(finduser.PostOffice[0].Pincode);
+//     //**al9103674
+//   }, (err, response, body) => {
+//     var finduser = body.find(user => body, undefined, 4);
+//     //console.log(JSON.parse(body,undefined,4))
+//     //console.log(JSON.stringify(finduser.PostOffice[0].Name));
+//     if (JSON.parse(JSON.stringify(finduser.Message != "No records found"))) {
+//       var Postoffice = JSON.parse(JSON.stringify(finduser.PostOffice[0].Name));
+//       var District = JSON.parse(JSON.stringify(finduser.PostOffice[0].District));
+//       var State = JSON.parse(JSON.stringify(finduser.PostOffice[0].State));
+//       var Country = JSON.parse(JSON.stringify(finduser.PostOffice[0].Country));
+//       var Pincode = JSON.parse(finduser.PostOffice[0].Pincode);
 
-      //var Pincode = JSON.stringify(finduser.PostOffice[0].Pincode);
-      console.log(Postoffice, District, State, Country, Pincode);
-      res.render('pincode', {
-        postoffice: Postoffice, city: District, state: State, pincode: Pincode, country: Country,
-        title: "Search address by pin code"
-      });
-    } else {
-      console.log(JSON.parse(JSON.stringify(finduser.Message)));
-      res.render('pincode', { postoffice: "No records found", city: "", state: "", pincode: "", country: "", title: "Search address by pin code" });
-    }
-  })
+//       //var Pincode = JSON.stringify(finduser.PostOffice[0].Pincode);
+//       console.log(Postoffice, District, State, Country, Pincode);
+//       res.render('pincode', {
+//         postoffice: Postoffice, city: District, state: State, pincode: Pincode, country: Country,
+//         title: "Search address by pin code"
+//       });
+//     } else {
+//       console.log(JSON.parse(JSON.stringify(finduser.Message)));
+//       res.render('pincode', { postoffice: "No records found", city: "", state: "", pincode: "", country: "", title: "Search address by pin code" });
+//     }
+//   })
 
 
-});
+// });
 
 module.exports = router;
 

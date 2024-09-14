@@ -16,7 +16,7 @@
         }
 
         .report-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
             border: 1px solid #ddd;
             padding: 20px;
@@ -92,22 +92,25 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Total leaves </th>
+                    <% data.length> 0 && Object.keys(data[0]).forEach(key => { if (key !== 'emp_name') { %>
+                        <th><%= key.replace('_total_leaves', '') %></th>
+                        <% } }); %>
+                </tr>
                 </tr>
             </thead>
             <tbody>
-                <% for (var i=0; i<data.length; i++){ %>
+                <% data.forEach(record=> { %>
                     <tr>
                         <td>
-                            <%= data[i]._id %>
+                            <%= record.emp_name %>
                         </td>
-                        <td>
-                            <%= data[i].totalLeaves %>
-                        </td>
+                        <% Object.keys(record).forEach(key=> { if (key !== 'emp_name') { %>
+                            <td>
+                                <%= record[key] %>
+                            </td>
+                            <% } }); %>
                     </tr>
-
-                    <!-- Add more rows as needed -->
-                    <% } %>
+                    <% }); %>
             </tbody>
         </table>
 

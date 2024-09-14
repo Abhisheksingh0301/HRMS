@@ -13,11 +13,14 @@ const urls = require('url');
 const { url } = require("inspector");
 const { stat } = require("fs");
 var router = express.Router();
+var authMiddleware = require("../routes/middleware/auth");  //added on 13-9-24
+
 
 
 /* GET index page */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Introduction page" })
+router.get("/",  function (req, res, next) {
+  req.session.userId = req.body.txtuser;
+  res.render("index", { title: "Introduction page", userId: req.session.userId})
 });
 
  module.exports = router;

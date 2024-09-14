@@ -54,8 +54,17 @@
         </ul>
       </div>
       <div class="flex items-center gap-6">
-        <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">Sign in</button>
-        <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+        <% if(userId){ %>
+          <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">
+            <%= userId %>
+          </button>
+          <button class="bg-orange-400 text-white px-5 py-2 rounded-full hover:bg-orange-700"><a
+              class="bg-orange-400 text-white px-5 py-2 rounded-full hover:bg-orange-700"
+              href="/logout">Logout</a></button>
+          <% } else { %>
+            <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">Sign in</button>
+            <% } %>
+              <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
       </div>
   </header>
 

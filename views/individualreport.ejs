@@ -79,7 +79,7 @@
     <div class="report-container">
         <div class="report-header">
             <h1>
-                <%= title %>
+                <%= heading %>
             </h1>
             <p>Employee Name: <%= data[0].emp_name %>
             </p>
@@ -113,7 +113,7 @@
         </table>
 
         <div class="footer">
-            <p><b>Total number of leaves :: <%= totalRecords %></b></p>
+            <p><b>Total number of leaves :: <%= totalRecords %>/28</b></p>
             <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %>
             </p>
             <p class="no-print">Print this report by using the print function in your browser.</p>
