@@ -17,7 +17,6 @@ body {
   padding: 15px;
   text-align: center;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  /* text-decoration: underline; */
 }
 #myheader:hover {
   /* background-color:floralwhite; */
@@ -92,7 +91,7 @@ th {
 /* Style the header with a grey background and some padding */
 .header {
   overflow: hidden;
-  background-color:#a03f92;
+  background-color:#db92d0;
   padding: 10px 10px;
 }
 

@@ -15,20 +15,21 @@
 
 <body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#9bf1df] h-screen">
   <div class="header">
-    <table class="border-none">
-      <tr>
-        <td style="width:20%"><img src='/images/hrm.jpg' alt='No image' width="150px" height="150px "></td>
-        <td style="width:80%">
-          <h1 id="h1header">Human resource management system</h1>
-        </td>
-      </tr>
-    </table>
+
+    <div class="flex flex-col  items-center justify-around my-5">
+      <div
+        class="sm:flex sm:flex-row flex flex-col justify-between items-center  w-full sm:w-[92%] mx-4 rounded-lg m-auto">
+        <img src='/images/hrm.jpg' alt='No image' width="150px" height="150px ">
+        <h1 id="h1header" class="text-center">Human resource management system</h1>
+        <div>&nbsp</div>
+      </div>
+    </div>
 
   </div>
   <header class="bg-white">
     <nav class="flex justify-between items-center w-[92%]  mx-auto">
       <div class="my=10">
-        <img class="w-20 cursor-pointer" src="/images/AKSPPT.jpg" alt="...">
+        <img class="w-20 cursor-pointer" src="/images/AKSPPT.jpg" alt="No image...">
       </div>
       <div
         class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto  w-full flex items-center px-5">
@@ -55,11 +56,11 @@
       </div>
       <div class="flex items-center gap-6">
         <% if(userId){ %>
-          <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">
+          <button class="bg-blue-400 text-white px-4 py-2 rounded-full hover:bg-blue-700">
             <%= userId %>
           </button>
-          <button class="bg-orange-400 text-white px-5 py-2 rounded-full hover:bg-orange-700"><a
-              class="bg-orange-400 text-white px-5 py-2 rounded-full hover:bg-orange-700"
+          <button class="bg-orange-400 text-white px-3 py-2 rounded-full hover:bg-orange-700"><a
+              class="bg-orange-400 text-white px-3 py-2 rounded-full hover:bg-orange-700"
               href="/logout">Logout</a></button>
           <% } else { %>
             <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">Sign in</button>

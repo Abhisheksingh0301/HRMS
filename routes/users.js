@@ -19,7 +19,8 @@ const { stat } = require("fs");
 var router = express.Router();
 var ObjectID = require('mongodb').ObjectID;
 var authMiddleware = require("../routes/middleware/auth");  //added on 13-9-24
-
+const { Console } = require("console");
+const bcrypt = require('bcrypt');
 // var pssm = PassoutModel.find({});
 // var trn = TranscriptModel.find({});
 /* GET index page */
@@ -29,7 +30,7 @@ router.get("/", authMiddleware, function (req, res, next) {
 
 //Get Employees page
 router.get("/employees", function (req, res, next) {
-  res.render("employees", { title: "Employees page" })
+  res.render("employees", { title: "Employees page", userId: req.session.userId })
 });
 //Add new employee
 router.post("/addemp/", (req, res) => {
@@ -41,7 +42,7 @@ router.post("/addemp/", (req, res) => {
     console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
-      res.render("hi", { title: "Duplicate record", userId:req.session.userId })
+      res.render("hi", { title: "Duplicate record", userId: req.session.userId })
     } else {
       const empData = {
         emp_name: rest,
@@ -55,7 +56,7 @@ router.post("/addemp/", (req, res) => {
           console.log('error', err);
         } else {
           console.log(empData);
-          res.redirect('../emplist');
+          res.render('emplist', { employeelist: employeelist, title: "Employees list", userId: req.session.userId });
         }
       });
     }
@@ -64,21 +65,43 @@ router.post("/addemp/", (req, res) => {
 });
 
 //DISPLAY LIST OF EMPLOYEES
-router.get('/emplist', authMiddleware, function (req, res) {
-  EmpMstModel.find(function (err, employeelist) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render('emplist', { employeelist: employeelist, title: "Employees list", userId: req.session.userId })
-    }
-  }).sort({ "emp_name": 1 });
+router.get('/emplist', authMiddleware, async (req, res) => {
+  try {
+    // Retrieve and sort the employee list
+    const employeelist = await EmpMstModel.find().sort({ emp_name: 1 });
+
+    // Render the employee list view with the retrieved data
+    res.render('emplist', {
+      employeelist: employeelist,
+      title: 'Employees list',
+      userId: req.session.userId
+    });
+  } catch (err) {
+    // Log the error and send an appropriate response
+    console.error('Error retrieving employee list:', err);
+    res.status(500).send('Internal server error');
+  }
 });
+
 
 
 //Get leaves page
-router.get("/leaves", function (req, res, next) {
-  res.render("leaves", { title: "Leaves page" })
+router.get('/leaves', authMiddleware, async (req, res, next) => {
+  try {
+    // Check if the user has the 'admin' role
+    const rolecheck = await LogModel.countDocuments({ role: 'admin', emp_name: req.session.fullName });
+
+    if (rolecheck > 0) {
+      res.render('leaves', { title: 'Leaves page', userId: req.session.userId });
+    } else {
+      res.render('hi', { title: 'You are not authorised !!!', userId: req.session.userId });
+    }
+  } catch (err) {
+    console.error('Error checking role:', err);
+    res.status(500).send('Internal server error');
+  }
 });
+
 //Add leave category
 router.post("/addlv/", (req, res) => {
   LeaveMstModel.find({ leave_abb: req.body.lvabb }).count(function (err, result) {
@@ -172,7 +195,7 @@ router.get("/attendance_entry", authMiddleware, (req, res) => {
 })
 
 //ADD ATTENDANCE
-router.post("/addatt/", (req, res) => {
+router.post("/addatt/", authMiddleware, (req, res) => {
   AttendanceModel.find({ emp_name: req.body.empnm, leave_date: req.body.dt }).count(function (err, result) {
     if (err)
       throw err;
@@ -205,7 +228,7 @@ router.post("/addatt/", (req, res) => {
                   } else {
                     console.log(attData);
 
-                    res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: attData, moment: moment });
+                    res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: attData, moment: moment, userId: req.session.userId });
                   }
                 })
               }
@@ -220,7 +243,7 @@ router.post("/addatt/", (req, res) => {
 //Access report page
 router.get('/reports', (req, res) => {
 
-  res.render('reports', { title: "Report page", userId: req.session.userId});
+  res.render('reports', { title: "Report page", userId: req.session.userId });
 });
 
 //Daily attendance report
@@ -288,7 +311,7 @@ router.get('/summaryreport', authMiddleware, (req, res) => {
     } else {
       const yr = moment().year();
       console.log(yr);
-      res.render('summaryreport', { title: "Summarised attendance report", empdata: empdata, moment: moment, year: yr, userId:req.session.userId });
+      res.render('summaryreport', { title: "Summarised attendance report", empdata: empdata, moment: moment, year: yr, userId: req.session.userId });
     }
   })
 });
@@ -378,24 +401,33 @@ router.post('/summaryrpt', (req, res) => {
 });
 
 //Login Post Form
-router.post('/login', (req, res, next) => {
-  const logindata = {
-    emp_name: req.body.txtuser,
-    password: req.body.txtpwd
-  }
-  LogModel.find({ emp_name: req.body.txtuser, password: req.body.password }, (err, user) => {
-    if (err) {
-      console.log(err);
-      return next(err);
+router.post('/login', async (req, res, next) => {
+  try {
+    // Find a user with the given emp_name
+    const user = await LogModel.findOne({ emp_name: req.body.txtuser });
+
+    // If user is not found or password is incorrect
+    if (!user || !(await bcrypt.compare(req.body.txtpwd, user.password))) {
+      console.log('Invalid credentials');
+      return res.render("hi", { title: "Invalid credentials", userId: req.session.userId });
     }
-    if (!user) {
-      return res.status(401).render("hi", { title: "Invalid credentials" });
-    }
-    req.session.userId = req.body.txtuser;
+
+    // Extract first name from full name
+    const namePart = req.body.txtuser.split(" ");
+    const firstName = namePart[0];
+
+    // Set session variables
+    req.session.userId = firstName;
+    req.session.fullName = req.body.txtuser;
     console.log(req.session.userId);
+
+    // Render the introduction page
     res.render("index", { title: "Introduction page", userId: req.session.userId });
+  } catch (err) {
+    console.log(err);
+    // Handle errors appropriately
+    return next(err);
   }
-  )
 });
 
 
@@ -405,40 +437,43 @@ router.get('/signup', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('signup', { title: "Signup page", empdata: empdata, userId: req.session.userId});
+      res.render('signup', { title: "Signup page", empdata: empdata, userId: req.session.userId });
     }
   });
 })
 
 
 //Signup post form
-router.post('/signup', (req, res) => {
-  LogModel.find({ emp_name: req.body.empname }).count(function (err, result) {
-    if (err) {
-      console.log(err);
+router.post('/signup', async (req, res) => {
+  try {
+    const result = await LogModel.countDocuments({ emp_name: req.body.empname });
+    if (result > 0) {
+      console.log("Duplicate name");
+      res.render('hi', { title: "Duplicate name", userId: req.session.userId });
     } else {
-      if (result > 0) {
-        console.log("Duplicate name");
-        res.render('hi', { title: "Duplicate name", userId: req.session.userId});
-      } else {
-        const logindata = {
-          emp_name: req.body.empname,
-          password: req.body.txtpwd
-        }
-        var LogData = LogModel(logindata);
-        LogData.save(function (err) {
-          if (err) {
-            console.log('error', err);
-          } else {
-            console.log(LogData);
-            res.render('login', { title: "Login Page", userId: req.session.userId });
-          }
-        })
-      }
-    }
+      const logindata = {
+        emp_name: req.body.empname,
+        password: req.body.txtpwd
+      };
+      const LogData = new LogModel(logindata);
 
-  })
-});
+      //Hash the password
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(LogData.password, saltRounds);
+
+      //Set the hashed password
+      LogData.password = hashedPassword;
+
+      //Save the new user to the Database
+      await LogData.save();
+      res.render('login', { title: "Login Page", userId: req.session.userId });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal server error');
+  }
+})
+
 //Logout 
 router.get('/logout', function (req, res, next) {
   req.session.destroy(function (err) {
