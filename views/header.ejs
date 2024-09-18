@@ -63,7 +63,9 @@
               class="bg-orange-400 text-white px-3 py-2 rounded-full hover:bg-orange-700"
               href="/logout">Logout</a></button>
           <% } else { %>
-            <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">Sign in</button>
+            <button class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-700">
+              <a class="bg-blue-400 text-white px-3 py-2 rounded-full hover:bg-blue-700" href="/logout">Login</a>
+            </button>
             <% } %>
               <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
       </div>

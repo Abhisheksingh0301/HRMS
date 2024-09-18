@@ -6,29 +6,40 @@
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
+
+    <div class="flex-1 bg-cover bg-center" style="background-image: url('/images/signup.jpg');">
+        <div class="flex items-center justify-center h-2/3 bg-black bg-opacity-50">
+            <div class="bg-white p-8 w-96 rounded-lg shadow-lg opacity-80">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-700 hover:text-green-800">
+                    <%= title %>
+                </h2>
+                <form action="/signup" method="post">
+                    <div class="mb-4">
+                    <label for="empname" class="block text-sm font-medium text-gray-700">Username</label>
+                    <select id="empname" name="empname"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none">
+                        <option value="0"> Select name</option>
+                        <% for (var i=0; i<empdata.length; i++){ %>
+                            <option value='<%= empdata[i].emp_name %>'>
+                                <%= empdata[i].emp_name %>
+                            </option>
+                            <% } %>
+                    </select>
+                    </div>
+                    <div class="mb-4">
+                    <label for="txtpwd" class="block text-sm font-medium text-gray-700">Password:</label>
+                    <input type="password" id="txtpwd" name="txtpwd" required
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div class="mb-4">
+                    <label for="txtcnfrmpwd" class="block text-sm font-medium text-gray-700">Confirm password:</label>
+                    <input type="password" id="txtcnfrmpwd" name="txtcnfrmpwd" required
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <button type="submit"
+                        class="bg-blue-400 text-sm py-2  mt-4 font-serif hover:bg-blue-500 rounded-lg w-full">Signup</button>
+                </form>
+            </div>
         </div>
-    </section>
-    <div class="flex flex-col  items-center justify-center my-5 bg-red-300">
-        <form action="/signup" method="post"
-            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[60%] mx-4 rounded-lg m-auto">
-            <label for="empname" class="font-serif">Username:</label>
-            <select id="empname" name="empname" class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                <option value="0"> Select name</option>
-                <% for (var i=0; i<empdata.length; i++){ %>
-                    <option value='<%= empdata[i].emp_name %>'>
-                        <%= empdata[i].emp_name %>
-                    </option>
-                    <% } %>
-            </select>
-            <label for="txtpwd" class="font-serif">Password:</label>
-            <input type="password" id="txtpwd" name="txtpwd" required
-                class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2">
-            <button type="submit" class="bg-green-500 text-sm py-2 w-3/4 font-serif hover:bg-green-600 rounded-lg">Signup</button>
-        </form>
     </div>
     <%- include('footer'); -%>
