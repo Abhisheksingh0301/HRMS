@@ -1,7 +1,5 @@
 var express = require("express");
 var os = require('os');
-// var PassoutModel = require("../schema/passout");
-// var TranscriptModel = require("../schema/transcript");
 var EmpMstModel = require("../schema/emp_master");
 var LeaveMstModel = require("../schema/leave_master");
 var HolidayMstModel = require("../schema/holiday_master");
@@ -29,7 +27,7 @@ router.get("/", authMiddleware, function (req, res, next) {
 });
 
 //Get Employees page
-router.get("/employees", function (req, res, next) {
+router.get("/employees",authMiddleware, function (req, res, next) {
   res.render("employees", { title: "Employees page", userId: req.session.userId })
 });
 //Add new employee
@@ -103,7 +101,7 @@ router.get('/leaves', authMiddleware, async (req, res, next) => {
 });
 
 //Add leave category
-router.post("/addlv/", (req, res) => {
+router.post("/addlv/",authMiddleware, (req, res) => {
   LeaveMstModel.find({ leave_abb: req.body.lvabb }).count(function (err, result) {
     if (err)
       throw err;
@@ -160,7 +158,7 @@ router.get('/edit-empl/:id', authMiddleware, function (req, res, next) {
 })
 
 //Edit employee  ::POST method
-router.post("/edit-empl", (req, res) => {
+router.post("/edit-empl",authMiddleware, (req, res) => {
   const empData = {
     emp_name: (req.body.empname).toUpperCase(),
     year_of_joining: req.body.joinyr,
@@ -179,11 +177,11 @@ router.post("/edit-empl", (req, res) => {
 });
 //Leave entry
 router.get("/attendance_entry", authMiddleware, (req, res) => {
-  EmpMstModel.find(function (err, empdata) {
+  EmpMstModel.find( (err, empdata) =>{
     if (err) {
       console.log('Error');
     } else {
-      LeaveMstModel.find(function (err1, leavedata) {
+      LeaveMstModel.find( (err1, leavedata)=> {
         if (err1) {
           console.log(err1);
         } else {
@@ -241,33 +239,51 @@ router.post("/addatt/", authMiddleware, (req, res) => {
 });
 
 //Access report page
-router.get('/reports', (req, res) => {
+router.get('/reports',authMiddleware, (req, res) => {
 
   res.render('reports', { title: "Report page", userId: req.session.userId });
 });
 
 //Daily attendance report
-router.get('/dailyreport', (req, res) => {
-  EmpMstModel.find(function (err, empdata) {
+router.get('/dailyreport',authMiddleware, (req, res) => {
+  EmpMstModel.find( (err, empdata) =>{
     if (err) {
       console.log(err);
     } else {
-      const yr = moment().year();
-      console.log(yr);
-      res.render('dailyreport', {
-        title: "Individual attendance report", empdata: empdata, moment: moment, year: yr,
-        userId: req.session.userId
+      LeaveMstModel.find((err, lv)=> {
+        if (err) {
+          console.log(err);
+        } else {
+          const yr = moment().year();
+          console.log(lv);
+          res.render('dailyreport', {
+            title: "Individual attendance report", empdata: empdata, moment: moment, year: yr,
+            userId: req.session.userId, lvdata: lv
+          });
+        }
       });
     }
   })
 });
 
 //Individual report :: POST menthod
-router.post('/individualrpt', (req, res) => {
+router.post('/individualrpt', authMiddleware, (req, res) => {
   const currentdate = new Date();
   const empname = req.body.empnm;
+  const chkleaves = req.body.chkleaves || [];
+  // const chkleaves = req.body.chkleaves ? req.body.chkleaves.map(id => ObjectId(id)) : [];
   const stdate = new Date(req.body.stdt);
   const enddate = new Date(req.body.enddt);
+  // Prepare the match condition
+  const matchCondition = {
+    emp_name: empname,
+    leave_date: { $gte: stdate, $lte: enddate }
+  };
+
+  // Add the leave_abb condition only if chkleaves is not empty
+  if (chkleaves.length > 0) {
+    matchCondition["Leave.leave_abb"] = { $in: chkleaves };
+  }
   AttendanceModel.aggregate([
     {
       $lookup: {
@@ -279,7 +295,7 @@ router.post('/individualrpt', (req, res) => {
     },
     { $unwind: "$Leave" },
     {
-      $match: { emp_name: empname, leave_date: { $gte: stdate, $lte: enddate } }
+      $match: matchCondition
     },
     { $sort: { "leave_date": 1 } }
   ], function (err, data) {
@@ -287,17 +303,23 @@ router.post('/individualrpt', (req, res) => {
       console.log("Error:", err);
     } else {
       const cnt = data.length;
-      res.render('individualreport', {
-        heading: "Employee Attendance Report",
-        title: empname,
-        data: data,
-        dept: "COE Office",
-        moment: moment,
-        stdate: stdate,
-        enddate: enddate,
-        curdt: currentdate,
-        totalRecords: cnt
-      });
+      console.log(req.body.chkleaves);
+      if (data || chkleaves.length) {
+        res.render('individualreport', {
+          heading: "Employee Attendance Report",
+          title: empname,
+          data: data,
+          dept: "COE Office",
+          moment: moment,
+          stdate: stdate,
+          enddate: enddate,
+          curdt: currentdate,
+          totalRecords: cnt
+        });
+      } else {
+        return res.render("hi", { title: "No leaves in this period", userId: req.session.userId });
+      }
+
     }
   });
 });
@@ -317,7 +339,7 @@ router.get('/summaryreport', authMiddleware, (req, res) => {
 });
 
 //Summary Report ::Post method
-router.post('/summaryrpt', (req, res) => {
+router.post('/summaryrpt',authMiddleware, (req, res) => {
   const currentdate = new Date();
   const stdate = new Date(req.body.stdt);
   const enddate = new Date(req.body.enddt);

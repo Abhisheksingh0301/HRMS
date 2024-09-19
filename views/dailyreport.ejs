@@ -14,21 +14,36 @@
         </div>
     </section>
     <div class="flex flex-col  items-center justify-center my-5">
-        <form action="/individualrpt/" method="POST" target="_blank"
-            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[60%] mx-4 rounded-lg m-auto">
-            <input type="date" id="stdt" name="stdt" required  class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-            <input type="date" id="enddt" name="enddt" required  class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-            <select id="nm" name="empnm" onchange="this.form.submit()"
-                class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                <option value="0"> Select name</option>
-                <% for (var i=0; i<empdata.length; i++){ %>
-                    <option value='<%= empdata[i].emp_name %>'>
-                        <%= empdata[i].emp_name %>
-                    </option>
-                    <% } %>
-            </select>
-        </form>
+        <div
+            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[80%] mx-4 rounded-lg m-auto">
+            <form action="/individualrpt/" method="POST" target="_blank"
+                class="sm:flex sm:flex-col flex flex-col justify-around items-center  w-full mx-4 rounded-lg m-auto">
+                <div class="flex flex-row  items-center w-full ">
+                    <input type="date" id="stdt" name="stdt" required
+                        class="text-sm w-2/3 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
+                    <input type="date" id="enddt" name="enddt" required
+                        class="text-sm w-2/3 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
+                    <select id="nm" name="empnm" onchange="this.form.submit()"
+                        class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2 font-serif">
+                        <option value="0"> Select name</option>
+                        <% for (var i=0; i<empdata.length; i++){ %>
+                            <option value='<%= empdata[i].emp_name %>'>
+                                <%= empdata[i].emp_name %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
+                <div class="flex flex-row  items-center justify-center gap-2 mt-6">
+                    <% lvdata.forEach(item=> { %>
+                        <input type="checkbox" id="<%= item._id %>" name="chkleaves[]" value="<%= item.leave_abb %>"
+                            checked>
+                        <label class="mr-5 font-serif" for="<%= item._id %>">
+                            <%= item.leave_desc %>
+                        </label>
+                        <% }) %>
+                </div>
+            </form>
+        </div>
     </div>
-
 
     <%- include('footer'); -%>
