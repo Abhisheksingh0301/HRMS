@@ -35,7 +35,7 @@
                 </div>
                 <div class="flex flex-row  items-center justify-center gap-2 mt-6">
                     <% lvdata.forEach(item=> { %>
-                        <input type="checkbox" id="<%= item._id %>" name="chkleaves[]" value="<%= item.leave_abb %>"
+                        <input type="checkbox" id="<%= item._id %>" name="chkleaves" value="<%= item.leave_abb %>"
                             checked>
                         <label class="mr-5 font-serif" for="<%= item._id %>">
                             <%= item.leave_desc %>

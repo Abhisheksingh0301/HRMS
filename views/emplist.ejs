@@ -15,7 +15,7 @@
             </h1>
         </div>
     </section>
-    <div class="h-2/3 flex flex-col items-center justify-center m-auto">
+    <div class="h-auto flex flex-col items-center justify-center m-auto">
         <% if(employeelist.length>0){ %>
             <table class="table-auto border">
                 <thead>
@@ -23,11 +23,12 @@
                         <th class="py-3 px-4 border-b">Name</th>
                         <th class="py-3 px-4 border-b">Joining year</th>
                         <th class="py-3 px-4 border-b">Gender</th>
+                        <th class="py-3 px-4 border-b">Mobile no</th>
                         <th class="py-3 px-4 border-b">Remarks</th>
                         <th class="py-3 px-4 border-b">Action</th>
                     </tr>
                 </thead>
-                <tbody id="myTable bg-sky-200">
+                <tbody id="myTable" class="bg-sky-100">
 
                     <% for (var i=0; i<employeelist.length; i++){ %>
                         <tr class="hover:bg-sky-200">
@@ -41,6 +42,9 @@
                                 <%= employeelist[i].gender %>
                             </td>
                             <td>
+                                <%= employeelist[i].mob %>
+                            </td>
+                            <td>
                                 <%= employeelist[i].remarks %>
                             </td>
                             <td>
@@ -51,7 +55,7 @@
 
                 </tbody>
                 <tr>
-                    <td colspan="5"> <a href="./employees"
+                    <td colspan="6"> <a href="./employees"
                             class="bg-blue-400 hover:bg-blue-600 px-3 py-3 rounded-lg">Add new records</a></td>
                 </tr>
             </table>

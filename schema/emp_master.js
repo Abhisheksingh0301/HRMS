@@ -5,6 +5,7 @@ var emp_mst=new Schema({
     emp_name:{type:String, required:true},
     year_of_joining:Number,
     gender:{type:String, required:true},
+    mob:{type:Number, required:true},
     entrydt:{type:Date, default:Date.now},
     remarks:String
 });

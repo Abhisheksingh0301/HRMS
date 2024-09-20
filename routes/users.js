@@ -27,11 +27,11 @@ router.get("/", authMiddleware, function (req, res, next) {
 });
 
 //Get Employees page
-router.get("/employees",authMiddleware, function (req, res, next) {
+router.get("/employees", authMiddleware, function (req, res, next) {
   res.render("employees", { title: "Employees page", userId: req.session.userId })
 });
 //Add new employee
-router.post("/addemp/", (req, res) => {
+router.post("/addemp/", authMiddleware, (req, res) => {
   const str = req.body.empname;
   const rest = str.toUpperCase();
   EmpMstModel.find({ emp_name: req.body.empname }).count(function (err, result) {
@@ -46,6 +46,7 @@ router.post("/addemp/", (req, res) => {
         emp_name: rest,
         year_of_joining: req.body.joinyr,
         gender: req.body.cmbGender,
+        mob: req.body.txtmob,
         remarks: req.body.rmrk
       }
       var data = EmpMstModel(empData);
@@ -53,8 +54,12 @@ router.post("/addemp/", (req, res) => {
         if (err) {
           console.log('error', err);
         } else {
-          console.log(empData);
-          res.render('emplist', { employeelist: employeelist, title: "Employees list", userId: req.session.userId });
+          EmpMstModel.find((err, data) => {
+            console.log(data);
+            // res.render('emplist', { employeelist: data, title: "Employees list", userId: req.session.userId });
+            res.redirect('../emplist');
+          }).sort({ emp_name: 1 });
+
         }
       });
     }
@@ -67,7 +72,7 @@ router.get('/emplist', authMiddleware, async (req, res) => {
   try {
     // Retrieve and sort the employee list
     const employeelist = await EmpMstModel.find().sort({ emp_name: 1 });
-
+    console.log("emplist var  ", employeelist);
     // Render the employee list view with the retrieved data
     res.render('emplist', {
       employeelist: employeelist,
@@ -101,7 +106,7 @@ router.get('/leaves', authMiddleware, async (req, res, next) => {
 });
 
 //Add leave category
-router.post("/addlv/",authMiddleware, (req, res) => {
+router.post("/addlv/", authMiddleware, (req, res) => {
   LeaveMstModel.find({ leave_abb: req.body.lvabb }).count(function (err, result) {
     if (err)
       throw err;
@@ -126,20 +131,28 @@ router.post("/addlv/",authMiddleware, (req, res) => {
         }
       });
     }
-
   })
 });
 
 //DISPLAY LEAVES CATEGORY
-router.get('/leavetype', authMiddleware, (req, res) => {
-  LeaveMstModel.find(function (err, lvlist) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render('leavetype', { lvlist: lvlist, title: "Leaves category", userId: req.session.userId });
-    }
-  }).sort({ "leave_abb": 1 });
+router.get('/leavetype', authMiddleware, async (req, res) => {
+  try {
+    // Fetch the leave types and sort them
+    const lvlist = await LeaveMstModel.find().sort({ leave_abb: 1 });
+
+    // Render the leave type view with the retrieved data
+    res.render('leavetype', {
+      lvlist: lvlist,
+      title: "Leaves Category",
+      userId: req.session.userId
+    });
+  } catch (err) {
+    // Log the error and send an appropriate response
+    console.error('Error retrieving leave types:', err);
+    res.status(500).send('Internal server error');
+  }
 });
+
 
 //EDIT EMPLOYEES
 router.get('/edit-empl/:id', authMiddleware, function (req, res, next) {
@@ -158,11 +171,12 @@ router.get('/edit-empl/:id', authMiddleware, function (req, res, next) {
 })
 
 //Edit employee  ::POST method
-router.post("/edit-empl",authMiddleware, (req, res) => {
+router.post("/edit-empl", authMiddleware, (req, res) => {
   const empData = {
     emp_name: (req.body.empname).toUpperCase(),
     year_of_joining: req.body.joinyr,
     gender: req.body.cmbGender,
+    mob: req.body.txtmob,
     remarks: req.body.rmrk
   }
   console.log(empData);
@@ -177,11 +191,11 @@ router.post("/edit-empl",authMiddleware, (req, res) => {
 });
 //Leave entry
 router.get("/attendance_entry", authMiddleware, (req, res) => {
-  EmpMstModel.find( (err, empdata) =>{
+  EmpMstModel.find((err, empdata) => {
     if (err) {
       console.log('Error');
     } else {
-      LeaveMstModel.find( (err1, leavedata)=> {
+      LeaveMstModel.find((err1, leavedata) => {
         if (err1) {
           console.log(err1);
         } else {
@@ -209,7 +223,8 @@ router.post("/addatt/", authMiddleware, (req, res) => {
         const attData = {
           emp_name: (req.body.empnm).toUpperCase(),
           leave_type: (req.body.lvcat).toUpperCase(),
-          leave_date: req.body.dt
+          leave_date: req.body.dt,
+          enteredby: (req.session.fullName).toUpperCase(),
         }
         var data = AttendanceModel(attData);
         data.save(function (err) {
@@ -239,18 +254,18 @@ router.post("/addatt/", authMiddleware, (req, res) => {
 });
 
 //Access report page
-router.get('/reports',authMiddleware, (req, res) => {
+router.get('/reports', authMiddleware, (req, res) => {
 
   res.render('reports', { title: "Report page", userId: req.session.userId });
 });
 
 //Daily attendance report
-router.get('/dailyreport',authMiddleware, (req, res) => {
-  EmpMstModel.find( (err, empdata) =>{
+router.get('/dailyreport', authMiddleware, (req, res) => {
+  EmpMstModel.find((err, empdata) => {
     if (err) {
       console.log(err);
     } else {
-      LeaveMstModel.find((err, lv)=> {
+      LeaveMstModel.find((err, lv) => {
         if (err) {
           console.log(err);
         } else {
@@ -270,7 +285,7 @@ router.get('/dailyreport',authMiddleware, (req, res) => {
 router.post('/individualrpt', authMiddleware, (req, res) => {
   const currentdate = new Date();
   const empname = req.body.empnm;
-  const chkleaves = req.body.chkleaves || [];
+  const chkleaves = req.body.chkleaves || [''];
   // const chkleaves = req.body.chkleaves ? req.body.chkleaves.map(id => ObjectId(id)) : [];
   const stdate = new Date(req.body.stdt);
   const enddate = new Date(req.body.enddt);
@@ -279,10 +294,13 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
     emp_name: empname,
     leave_date: { $gte: stdate, $lte: enddate }
   };
-
+  //const selectedHobbies = Array.isArray(hobbies) ? hobbies : [hobbies].filter(Boolean);
+  const selectedLv = Array.isArray(chkleaves) ? chkleaves : [chkleaves].filter(Boolean);
   // Add the leave_abb condition only if chkleaves is not empty
-  if (chkleaves.length > 0) {
-    matchCondition["Leave.leave_abb"] = { $in: chkleaves };
+  if (selectedLv.length > 0) {
+    matchCondition["Leave.leave_abb"] = { $in: selectedLv };
+    console.log(chkleaves);
+    //matchCondition[leave_type] = { $in: chkleaves };
   }
   AttendanceModel.aggregate([
     {
@@ -339,7 +357,7 @@ router.get('/summaryreport', authMiddleware, (req, res) => {
 });
 
 //Summary Report ::Post method
-router.post('/summaryrpt',authMiddleware, (req, res) => {
+router.post('/summaryrpt', authMiddleware, (req, res) => {
   const currentdate = new Date();
   const stdate = new Date(req.body.stdt);
   const enddate = new Date(req.body.enddt);
@@ -426,7 +444,7 @@ router.post('/summaryrpt',authMiddleware, (req, res) => {
 router.post('/login', async (req, res, next) => {
   try {
     // Find a user with the given emp_name
-    const user = await LogModel.findOne({ emp_name: req.body.txtuser });
+    const user = await LogModel.findOne({ emp_name: (req.body.txtuser).toUpperCase() });
 
     // If user is not found or password is incorrect
     if (!user || !(await bcrypt.compare(req.body.txtpwd, user.password))) {
@@ -439,7 +457,7 @@ router.post('/login', async (req, res, next) => {
     const firstName = namePart[0];
 
     // Set session variables
-    req.session.userId = firstName;
+    req.session.userId = (firstName).toUpperCase();
     req.session.fullName = req.body.txtuser;
     console.log(req.session.userId);
 
