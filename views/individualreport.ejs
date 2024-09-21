@@ -73,12 +73,13 @@
             }
         }
     </style>
+      <link href="/tailwind/output.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="report-container">
         <div class="report-header">
-            <h1>
+            <h1 class="text-5xl font-sans font-extrabold">
                 <%= heading %>
             </h1>
             <p>Employee Name: <%= data[0].emp_name %>
@@ -116,6 +117,7 @@
             <p><b>Total number of leaves :: <%= totalRecords %>/28</b></p>
             <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %>
             </p>
+            <p class="text-xs">© 2024 Abhishek Kumar Singh</p>
             <p class="no-print">Print this report by using the print function in your browser.</p>
         </div>
     </div>

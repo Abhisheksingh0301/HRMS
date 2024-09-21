@@ -33,7 +33,7 @@ mongoose.connect(process.env.CONNECTION_STR,{
 , useUnifiedTopology: true
 })
 
- .then(()=>console.log('Connection successful'))
+ .then(()=>console.log(`Connection successful on PORT :: ${process.env.PORT}`))
  //.catch((err)=>console.error );
  .catch((err)=>console.log('Connection error') );
  

@@ -36,10 +36,11 @@
                         Female</option>
             </select>
             <input aria-label="Mobile no" type="number" min="5555555555" max="9999999999" name="txtmob"
-                placeholder="Mobile number" autocomplete="off" required="<%= empdata.mob %>" <input
-                aria-label="Enter remarks" type="text" name="rmrk" placeholder="Remarks (if any)" autocomplete="off"
+                class="text-sm text-gray-base w-3/4 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2"
+                placeholder="Mobile number" autocomplete="off" required value="<%= empdata.mob %>">
+            <input aria-label="Enter remarks" type="text" name="rmrk" placeholder="Remarks (if any)" autocomplete="off"
                 value="<%= empdata.remarks %>"
-                class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
+            class="text-sm text-gray-base w-3/4 mr-3 py-4 px-4 h-2 border border-gray-200 rounded mb-2" />
 
             <button type="submit" class="bg-blue-400 py-3 w-3/4 mb-4 hover:bg-blue-600">
                 Update
