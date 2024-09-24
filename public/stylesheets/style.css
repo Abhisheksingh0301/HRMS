@@ -60,7 +60,8 @@ table {
 
 th, td {
   text-align: left;
-  padding: 8px;
+  padding: 1px;
+  padding-left:4px;
   border: 1px solid blueviolet;
 }
 

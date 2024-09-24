@@ -82,7 +82,7 @@
             <h1 class="text-5xl font-sans font-extrabold">
                 <%= heading %>
             </h1>
-            <p>Employee Name: <%= data[0].emp_name %>
+            <p>Employee Name: <%= data.length > 0 ? data[0].emp_name : 'N/A' %></p>
             </p>
             <p> Department: <%= dept %>
             </p>

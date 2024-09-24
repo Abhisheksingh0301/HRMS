@@ -19,11 +19,11 @@ var ObjectID = require('mongodb').ObjectID;
 var authMiddleware = require("../routes/middleware/auth");  //added on 13-9-24
 const { Console } = require("console");
 const bcrypt = require('bcrypt');
-// var pssm = PassoutModel.find({});
-// var trn = TranscriptModel.find({});
+
 /* GET index page */
 router.get("/", authMiddleware, function (req, res, next) {
   res.render("index", { title: "Introduction page", userId: req.session.userId });
+
 });
 
 //Get Employees page
@@ -72,7 +72,6 @@ router.get('/emplist', authMiddleware, async (req, res) => {
   try {
     // Retrieve and sort the employee list
     const employeelist = await EmpMstModel.find().sort({ emp_name: 1 });
-    console.log("emplist var  ", employeelist);
     // Render the employee list view with the retrieved data
     res.render('emplist', {
       employeelist: employeelist,
@@ -218,7 +217,7 @@ router.post("/addatt/", authMiddleware, (req, res) => {
     } else {
       const lvdt = moment(req.body.dt).format('dddd');
       if (lvdt == 'Sunday') {
-        res.render("hi", { title: "Selected date is Sunday" })
+        res.render("hi", { title: "Selected date is Sunday", userId: req.session.userId })
       } else {
         const attData = {
           emp_name: (req.body.empnm).toUpperCase(),
@@ -322,7 +321,8 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
     } else {
       const cnt = data.length;
       console.log(req.body.chkleaves);
-      if (data || chkleaves.length) {
+      console.log(data);
+      if (data.length || chkleaves.length) {
         res.render('individualreport', {
           heading: "Employee Attendance Report",
           title: empname,
@@ -493,10 +493,10 @@ router.post('/signup', async (req, res) => {
     } else {
       if (req.body.txtcnfrmpwd == req.body.txtpwd) {
 
-
+        const employeelist = await EmpMstModel.find({emp_name:req.body.empname}).sort({ emp_name: 1 });
         const logindata = {
           emp_name: req.body.empname,
-          password: req.body.txtpwd
+          password: req.body.txtpwd,
         };
         const LogData = new LogModel(logindata);
 
