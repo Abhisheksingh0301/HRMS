@@ -320,9 +320,10 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
       console.log("Error:", err);
     } else {
       const cnt = data.length;
-      console.log(req.body.chkleaves);
-      console.log(data);
-      if (data.length || chkleaves.length) {
+      // console.log(req.body.chkleaves);
+      // console.log(data);
+     // if (data.length || chkleaves.length) {
+      if (data.length) {
         res.render('individualreport', {
           heading: "Employee Attendance Report",
           title: empname,
