@@ -510,7 +510,18 @@ router.post('/signup', async (req, res) => {
 
         //Save the new user to the Database
         await LogData.save();
-        res.render('login', { title: "Login form", userId: req.session.userId });
+
+        LogModel.find((err,Loglist)=>{
+          if (err) {
+              console.error(err);
+          } else {
+              console.log(Loglist);
+              res.render('login',{title:"Login form",userId: req.session.userId, empdata:Loglist});
+          }
+      }).sort({emp_name:1})
+
+
+       // res.render('login', { title: "Login form", userId: req.session.userId });
       } else {
         res.render('hi', { title: "Password didn't match", userId: req.session.userId });
       }
