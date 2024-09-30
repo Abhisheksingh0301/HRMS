@@ -189,28 +189,43 @@ router.post("/edit-empl", authMiddleware, (req, res) => {
   });
 });
 //Leave entry
-router.get("/attendance_entry", authMiddleware, (req, res) => {
-  EmpMstModel.find((err, empdata) => {
-    if (err) {
-      console.log('Error');
+router.get("/attendance_entry", authMiddleware, async (req, res) => {
+  try {
+    const empdata = await EmpMstModel.find();
+    const leavedata = await LeaveMstModel.find();
+    const prm = await LogModel.find({  role: 'admin', emp_name: req.session.fullName  });
+
+    console.log("prm variable ::::::::::::::::::::", prm.length);
+
+    if (prm.length > 0) {
+      console.log(prm.length);
+      res.render('attendance_entry', {
+        title: "Attendance entry",
+        userId: req.session.userId,
+        leavedata: leavedata,
+        empdata: empdata,
+        attData: "",
+        moment: moment
+      });
     } else {
-      LeaveMstModel.find((err1, leavedata) => {
-        if (err1) {
-          console.log(err1);
-        } else {
-          res.render('attendance_entry', { title: "Attendance entry", userId: req.session.userId, leavedata: leavedata, empdata: empdata, attData: "", moment: moment });
-        }
-      })
+      console.log(prm.length);
+      return res.render("hi", {
+        title: "You are not authorised",
+        userId: req.session.userId
+      });
     }
-  })
-})
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 //ADD ATTENDANCE
 router.post("/addatt/", authMiddleware, (req, res) => {
   AttendanceModel.find({ emp_name: req.body.empnm, leave_date: req.body.dt }).count(function (err, result) {
     if (err)
       throw err;
-    console.log('Total count::::', result);
+   // console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
       res.render("hi", { title: "Duplicate record", userId: req.session.userId })
@@ -219,34 +234,43 @@ router.post("/addatt/", authMiddleware, (req, res) => {
       if (lvdt == 'Sunday') {
         res.render("hi", { title: "Selected date is Sunday", userId: req.session.userId })
       } else {
-        const attData = {
-          emp_name: (req.body.empnm).toUpperCase(),
-          leave_type: (req.body.lvcat).toUpperCase(),
-          leave_date: req.body.dt,
-          enteredby: (req.session.fullName).toUpperCase(),
-        }
-        var data = AttendanceModel(attData);
-        data.save(function (err) {
-          if (err) {
-            console.log('error', err);
-          } else {
-            EmpMstModel.find(function (err, empdata) {
-              if (err) {
-                console.log('Error');
-              } else {
-                LeaveMstModel.find(function (err1, leavedata) {
-                  if (err1) {
-                    console.log(err1);
-                  } else {
-                    console.log(attData);
+        // if({role: 'admin'}){}
+        //const user = await LogModel.findOne({ emp_name: (req.body.txtuser).toUpperCase() });
+        const prm = LogModel.find({ role: 'admin', emp_name: req.session.fullName });
+        if (prm) {
 
-                    res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: attData, moment: moment, userId: req.session.userId });
-                  }
-                })
-              }
-            })
+
+          const attData = {
+            emp_name: (req.body.empnm).toUpperCase(),
+            leave_type: (req.body.lvcat).toUpperCase(),
+            leave_date: req.body.dt,
+            enteredby: (req.session.fullName).toUpperCase(),
           }
-        });
+          var data = AttendanceModel(attData);
+          data.save(function (err) {
+            if (err) {
+              console.log('error', err);
+            } else {
+              EmpMstModel.find(function (err, empdata) {
+                if (err) {
+                  console.log('Error');
+                } else {
+                  LeaveMstModel.find(function (err1, leavedata) {
+                    if (err1) {
+                      console.log(err1);
+                    } else {
+                      // console.log(attData);
+
+                      res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: attData, moment: moment, userId: req.session.userId });
+                    }
+                  })
+                }
+              })
+            }
+          });//** */
+        } else {
+          return res.render("hi", { title: "You are not authourised", userId: req.session.userId });
+        }
       }
     }
   })
@@ -269,7 +293,7 @@ router.get('/dailyreport', authMiddleware, (req, res) => {
           console.log(err);
         } else {
           const yr = moment().year();
-          console.log(lv);
+         // console.log(lv);
           res.render('dailyreport', {
             title: "Individual attendance report", empdata: empdata, moment: moment, year: yr,
             userId: req.session.userId, lvdata: lv
@@ -322,7 +346,7 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
       const cnt = data.length;
       // console.log(req.body.chkleaves);
       // console.log(data);
-     // if (data.length || chkleaves.length) {
+      // if (data.length || chkleaves.length) {
       if (data.length) {
         res.render('individualreport', {
           heading: "Employee Attendance Report",
@@ -460,7 +484,7 @@ router.post('/login', async (req, res, next) => {
     // Set session variables
     req.session.userId = (firstName).toUpperCase();
     req.session.fullName = req.body.txtuser;
-    console.log(req.session.userId);
+    //console.log(req.session.userId);
 
     // Render the introduction page
     res.render("index", { title: "Introduction page", userId: req.session.userId });
@@ -494,7 +518,7 @@ router.post('/signup', async (req, res) => {
     } else {
       if (req.body.txtcnfrmpwd == req.body.txtpwd) {
 
-        const employeelist = await EmpMstModel.find({emp_name:req.body.empname}).sort({ emp_name: 1 });
+        const employeelist = await EmpMstModel.find({ emp_name: req.body.empname }).sort({ emp_name: 1 });
         const logindata = {
           emp_name: req.body.empname,
           password: req.body.txtpwd,
@@ -511,17 +535,17 @@ router.post('/signup', async (req, res) => {
         //Save the new user to the Database
         await LogData.save();
 
-        LogModel.find((err,Loglist)=>{
+        LogModel.find((err, Loglist) => {
           if (err) {
-              console.error(err);
+            console.error(err);
           } else {
-              console.log(Loglist);
-              res.render('login',{title:"Login form",userId: req.session.userId, empdata:Loglist});
+            //console.log(Loglist);
+            res.render('login', { title: "Login form", userId: req.session.userId, empdata: Loglist });
           }
-      }).sort({emp_name:1})
+        }).sort({ emp_name: 1 })
 
 
-       // res.render('login', { title: "Login form", userId: req.session.userId });
+        // res.render('login', { title: "Login form", userId: req.session.userId });
       } else {
         res.render('hi', { title: "Password didn't match", userId: req.session.userId });
       }
