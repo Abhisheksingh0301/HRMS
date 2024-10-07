@@ -73,7 +73,7 @@
             }
         }
     </style>
-      <link href="/tailwind/output.css" rel="stylesheet">
+    <link href="/tailwind/output.css" rel="stylesheet">
 </head>
 
 <body>
@@ -82,7 +82,7 @@
             <h1 class="text-5xl font-sans font-extrabold">
                 <%= heading %>
             </h1>
-            <p>Employee Name: <%= data.length > 0 ? data[0].emp_name : 'N/A' %></p>
+            <p>Employee Name: <%= data.length> 0 ? data[0].emp_name : 'N/A' %></p>
             </p>
             <p> Department: <%= dept %>
             </p>
@@ -101,7 +101,11 @@
                 <% for (var i=0; i<data.length; i++){ %>
                     <tr>
                         <td>
-                            <%= moment(data[i].leave_date).format("dddd, MMMM Do YYYY") %>
+                            <%  const leaveDate=moment(data[i].leave_date);
+                                let formattedDate=leaveDate.format("dddd, MMMM Do YYYY"); 
+                                 if (leaveDate.day()===6) { 
+                                formattedDate +=' *' ; } %>
+                                <%= formattedDate %>
                         </td>
                         <td>
                             <%= data[i].Leave.leave_desc %>

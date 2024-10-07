@@ -193,7 +193,7 @@ router.get("/attendance_entry", authMiddleware, async (req, res) => {
   try {
     const empdata = await EmpMstModel.find();
     const leavedata = await LeaveMstModel.find();
-    const prm = await LogModel.find({  role: 'admin', emp_name: req.session.fullName  });
+    const prm = await LogModel.find({ role: 'admin', emp_name: req.session.fullName });
 
     console.log("prm variable ::::::::::::::::::::", prm.length);
 
@@ -225,7 +225,7 @@ router.post("/addatt/", authMiddleware, (req, res) => {
   AttendanceModel.find({ emp_name: req.body.empnm, leave_date: req.body.dt }).count(function (err, result) {
     if (err)
       throw err;
-   // console.log('Total count::::', result);
+    // console.log('Total count::::', result);
     if (result > 0) {
       console.log('Duplicate');
       res.render("hi", { title: "Duplicate record", userId: req.session.userId })
@@ -293,7 +293,7 @@ router.get('/dailyreport', authMiddleware, (req, res) => {
           console.log(err);
         } else {
           const yr = moment().year();
-         // console.log(lv);
+          // console.log(lv);
           res.render('dailyreport', {
             title: "Individual attendance report", empdata: empdata, moment: moment, year: yr,
             userId: req.session.userId, lvdata: lv
@@ -343,11 +343,19 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
     if (err) {
       console.log("Error:", err);
     } else {
-      const cnt = data.length;
+      //const cnt = data.length;
       // console.log(req.body.chkleaves);
       // console.log(data);
       // if (data.length || chkleaves.length) {
-      if (data.length) {
+      //********************************************** */
+      const totalDays = Math.ceil(data.reduce((count, record) => {
+        const leaveDate = new Date(record.leave_date);
+        return count + (leaveDate.getDay() === 6 ? 0.5 : 1); // 0.5 for Saturday
+      }, 0));
+
+      //////////************************************** */
+
+      if (totalDays > 0) {
         res.render('individualreport', {
           heading: "Employee Attendance Report",
           title: empname,
@@ -357,7 +365,7 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
           stdate: stdate,
           enddate: enddate,
           curdt: currentdate,
-          totalRecords: cnt
+          totalRecords: totalDays
         });
       } else {
         return res.render("hi", { title: "No leaves in this period", userId: req.session.userId });
@@ -376,16 +384,17 @@ router.get('/summaryreport', authMiddleware, (req, res) => {
     } else {
       const yr = moment().year();
       console.log(yr);
-      res.render('summaryreport', { title: "Summarised attendance report", empdata: empdata, moment: moment, year: yr, userId: req.session.userId });
+      res.render('summaryreport', { title: "Summarised report", empdata: empdata, moment: moment, year: yr, userId: req.session.userId });
     }
   })
 });
 
-//Summary Report ::Post method
+//Summary report :: POST method
 router.post('/summaryrpt', authMiddleware, (req, res) => {
   const currentdate = new Date();
   const stdate = new Date(req.body.stdt);
   const enddate = new Date(req.body.enddt);
+
   AttendanceModel.aggregate([
     {
       $lookup: {
@@ -403,7 +412,8 @@ router.post('/summaryrpt', authMiddleware, (req, res) => {
       $group: {
         _id: {
           emp_name: "$emp_name",
-          leave_type: "$Leave.leave_desc"
+          leave_type: "$Leave.leave_desc",
+          leave_date: "$leave_date" // Include leave_date for Saturday checking
         },
         totalLeaves: { $sum: 1 } // Count the number of leaves for each employee
       }
@@ -413,44 +423,47 @@ router.post('/summaryrpt', authMiddleware, (req, res) => {
     if (err) {
       console.log("Error:", err);
     } else {
+      // Create an object to hold adjusted totals for each employee
+      const adjustedTotals = {};
 
+      // Calculate total leaves considering Saturdays as 0.5
+      data.forEach(record => {
+        const leaveDate = new Date(record._id.leave_date);
+        const isSaturday = leaveDate.getDay() === 6; // 6 means Saturday
+        const adjustedLeaves = isSaturday ? 0.5 : 1; // Count Saturday as 0.5
 
-      // Transform the data into the desired format
-      const pivotTable = data.reduce((acc, record) => {
-        const { emp_name, leave_type } = record._id;
-        const totalLeaves = record.totalLeaves;
+        const empName = record._id.emp_name;
+        const leaveType = record._id.leave_type;
 
-        if (!acc[emp_name]) {
-          acc[emp_name] = { emp_name };
+        if (!adjustedTotals[empName]) {
+          adjustedTotals[empName] = {};
         }
 
-        // Set the leave type and total leaves dynamically
-        acc[emp_name][`${leave_type}_total_leaves`] = totalLeaves;
+        if (!adjustedTotals[empName][leaveType]) {
+          adjustedTotals[empName][leaveType] = 0;
+        }
 
-        return acc;
-      }, {});
-
-      // Convert the object to an array of values
-      const pivotTableArray = Object.values(pivotTable);
-
-      // Determine unique leave types from the data
-      const leaveTypes = [...new Set(data.map(record => record._id.leave_type))];
-
-      // Ensure each row has columns for all leave types with a default value of 0
-      const formattedPivotTable = pivotTableArray.map(row => {
-        const formattedRow = { emp_name: row.emp_name };
-
-        leaveTypes.forEach(leaveType => {
-          formattedRow[`${leaveType}_total_leaves`] = row[`${leaveType}_total_leaves`] || 0;
-        });
-
-        return formattedRow;
+        adjustedTotals[empName][leaveType] += adjustedLeaves; // Accumulate adjusted leaves
       });
 
-      console.log(formattedPivotTable);
+      // Convert adjusted totals into an array format
+      const formattedPivotTable = Object.keys(adjustedTotals).map(empName => {
+        const leaveData = { emp_name: empName };
 
-      // console.log(data);
-      const cnt = data.length;
+        Object.keys(adjustedTotals[empName]).forEach(leaveType => {
+          leaveData[`${leaveType}_total_leaves`] = Math.ceil(adjustedTotals[empName][leaveType]); // Use Math.floor to ensure integer
+        });
+
+        return leaveData;
+      });
+
+      // Calculate total records as an integer
+      const totalRecords = Math.ceil(formattedPivotTable.reduce((sum, row) => {
+        return sum + Object.values(row).filter(v => typeof v === 'number').reduce((a, b) => a + b, 0);
+      }, 0));
+
+      //console.log(formattedPivotTable);
+
       res.render('summreport', {
         title: "Summarised Attendance Report",
         data: formattedPivotTable,
@@ -459,11 +472,13 @@ router.post('/summaryrpt', authMiddleware, (req, res) => {
         stdate: stdate,
         enddate: enddate,
         curdt: currentdate,
-        totalRecords: cnt
+        totalRecords: totalRecords // This will be an integer
       });
     }
   });
 });
+
+
 
 //Login Post Form
 router.post('/login', async (req, res, next) => {
