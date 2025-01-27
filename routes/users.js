@@ -348,6 +348,7 @@ router.post('/individualrpt', authMiddleware, (req, res) => {
       // console.log(data);
       // if (data.length || chkleaves.length) {
       //********************************************** */
+      //console.log(data);
       const totalDays = Math.ceil(data.reduce((count, record) => {
         const leaveDate = new Date(record.leave_date);
         return count + (leaveDate.getDay() === 6 ? 0.5 : 1); // 0.5 for Saturday

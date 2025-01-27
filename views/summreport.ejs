@@ -54,10 +54,14 @@
         td {
             padding: 8px;
             text-align: left;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         th {
             background-color: #f4f4f4;
+        }
+        .center-align {
+            text-align: center;
         }
 
         .footer {
@@ -75,51 +79,56 @@
     </style>
     <link href="/tailwind/output.css" rel="stylesheet">
 </head>
-
 <body>
     <div class="report-container">
         <div class="report-header">
-            <h1 class="text-5xl font-sans font-extrabold">
-                <%= title %>
-            </h1>
-            <p> Department: <%= dept %>
-            </p>
-            <p>Report Period:<%= moment(stdate).format("DD-MMM-YYYY") %> to <%= moment(enddate).format("DD-MMM-YYYY") %>
-            </p>
+            <h1 class="text-5xl font-sans font-extrabold"><%= title %></h1>
+            <p>Department: <%= dept %></p>
+            <p>Report Period: <%= moment(stdate).format("DD-MMM-YYYY") %> to <%= moment(enddate).format("DD-MMM-YYYY") %></p>
         </div>
 
         <table>
             <thead>
                 <tr>
                     <th>Name</th>
-                    <% data.length> 0 && Object.keys(data[0]).forEach(key => { if (key !== 'emp_name') { %>
-                        <th><%= key.replace('_total_leaves', '') %></th>
-                        <% } }); %>
-                </tr>
+                    <% 
+                    const headersSet = new Set();
+                    data.forEach(record => {
+                        Object.keys(record).forEach(key => {
+                            if (key !== 'emp_name' && key !== 'Total_Leaves') {
+                                headersSet.add(key.replace('_total_leaves', ''));
+                            }
+                        });
+                    });
+                    const headers = Array.from(headersSet);
+                    headers.forEach(header => { %>
+                        <th class="center-align"><%= header %></th>
+                    <% }); %>
+                    <th class="center-align">Total</th> <!-- Add the Total column header at the end -->
                 </tr>
             </thead>
             <tbody>
-                <% data.forEach(record=> { %>
+                <% data.forEach(record => { %>
                     <tr>
-                        <td>
-                            <%= record.emp_name %>
-                        </td>
-                        <% Object.keys(record).forEach(key=> { if (key !== 'emp_name') { %>
-                            <td>
-                                <%= record[key] %>
-                            </td>
-                            <% } }); %>
+                        <td><%= record.emp_name %></td>
+                        <% 
+                        let totalLeaves = 0;
+                        headers.forEach(header => {
+                            const leaveValue = parseFloat(record[`${header}_total_leaves`] || 0);
+                            totalLeaves += leaveValue;
+                        %>
+                        <td class="center-align"><%= leaveValue || '' %></td>
+                        <% }); %>
+                        <td class="center-align"><%= totalLeaves %></td> <!-- Display the total sum -->
                     </tr>
-                    <% }); %>
+                <% }); %>
             </tbody>
         </table>
 
         <div class="footer">
-            <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %>
-            </p>
+            <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %></p>
+            <p class="text-xs">© 2024 Abhishek Kumar Singh</p>
             <p class="no-print">Print this report by using the print function in your browser.</p>
         </div>
     </div>
-</body>
-
 </html>
