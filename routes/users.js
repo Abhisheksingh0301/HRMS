@@ -6,7 +6,7 @@ var HolidayMstModel = require("../schema/holiday_master");
 var AttendanceModel = require("../schema/attendance");
 var LogModel = require("../schema/login");
 var moment = require('moment');
-var climate = require('city-weather');
+// var climate = require('city-weather');
 const { ObjectId } = require("mongodb");
 var pincode = require('pincode');
 const res = require("express/lib/response");
@@ -55,7 +55,7 @@ router.post("/addemp/", authMiddleware, (req, res) => {
           console.log('error', err);
         } else {
           EmpMstModel.find((err, data) => {
-            console.log(data);
+            //console.log(data);
             // res.render('emplist', { employeelist: data, title: "Employees list", userId: req.session.userId });
             res.redirect('../emplist');
           }).sort({ emp_name: 1 });
@@ -162,7 +162,7 @@ router.get('/edit-empl/:id', authMiddleware, function (req, res, next) {
     if (err) {
       throw err;
     } else {
-      console.log(data);
+      //console.log(data);
       res.render('edit-empl', { empdata: data, title: "Edit Employee", userId: req.session.userId });
     }
 
@@ -384,7 +384,7 @@ router.get('/summaryreport', authMiddleware, (req, res) => {
       console.log(err);
     } else {
       const yr = moment().year();
-      console.log(yr);
+      // console.log(yr);
       res.render('summaryreport', { title: "Summarised report", empdata: empdata, moment: moment, year: yr, userId: req.session.userId });
     }
   })

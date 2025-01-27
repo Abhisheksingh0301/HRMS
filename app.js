@@ -25,6 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Db connection
+mongoose.set('strictQuery', false);
 mongoose.Promise=global.Promise;
 //mongoose.connect('mongodb://localhost:27017/school', {useNewUrlParser: true, useUnifiedTopology: true})
 //mongoose.connect(,{

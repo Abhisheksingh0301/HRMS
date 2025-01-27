@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
             if (err) {
                 console.error(err);
             } else {
-                console.log(Loglist);
+               // console.log(Loglist);
                 res.render('login',{title:"Login form",userId: req.session.userId, empdata:Loglist});
             }
         }).sort({emp_name:1})
