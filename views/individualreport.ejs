@@ -7,122 +7,58 @@
     <title>
         <%= title %>
     </title>
+    <link href="/tailwind/output.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            color: #333;
-        }
-
-        .report-container {
-            max-width: 800px;
-            margin: auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .report-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .report-header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .report-header p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #ddd;
-        }
-
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #777;
-        }
-
         @media print {
             .no-print {
-                display: none;
+                display: none !important;
             }
         }
     </style>
-    <link href="/tailwind/output.css" rel="stylesheet">
 </head>
 
-<body>
-    <div class="report-container">
-        <div class="report-header">
-            <h1 class="text-5xl font-sans font-extrabold">
+<body class="font-sans text-gray-800 px-10 py-6">
+    <div class="max-w-3xl mx-auto border border-gray-300 px-10 py-6 rounded-lg">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold">
                 <%= heading %>
             </h1>
-            <p>Employee Name: <%= data.length> 0 ? data[0].emp_name : 'N/A' %></p>
-            </p>
-            <p> Department: <%= dept %>
-            </p>
-            <p>Report Period:<%= moment(stdate).format("DD-MMM-YYYY") %> to <%= moment(enddate).format("DD-MMM-YYYY") %>
-            </p>
+            <p class="text-lg">Employee Name: <%= data.length > 0 ? data[0].emp_name : 'N/A' %></p>
+            <p class="text-lg">Department: <%= dept %></p>
+            <p class="text-lg">Report Period: <%= moment(stdate).format("DD-MMM-YYYY") %> to <%= moment(enddate).format("DD-MMM-YYYY") %></p>
         </div>
 
-        <table>
-            <thead>
+        <table class="w-full border-collapse border border-gray-300 my-6">
+            <thead style="background-color: #E5E7E1;">
                 <tr>
-                    <th>Date</th>
-                    <th>Leave category</th>
+                    <th class="border border-gray-400 p-2 text-left">Sl no.</th>
+                    <th class="border border-gray-400 p-2 text-left">Date</th>
+                    <th class="border border-gray-400 p-2 text-left">Leave category</th>
                 </tr>
             </thead>
             <tbody>
                 <% for (var i=0; i<data.length; i++){ %>
-                    <tr>
-                        <td>
-                            <%  const leaveDate=moment(data[i].leave_date);
-                                let formattedDate=leaveDate.format("dddd, MMMM Do YYYY"); 
-                                 if (leaveDate.day()===6) { 
-                                formattedDate +=' *' ; } %>
-                                <%= formattedDate %>
-                        </td>
-                        <td>
-                            <%= data[i].Leave.leave_desc %>
-                        </td>
-                    </tr>
-
-                    <!-- Add more rows as needed -->
-                    <% } %>
+                <tr>
+                    <td class="border text-center border-gray-300 p-2"><%= i+1 %></td>
+                    <td class="border border-gray-300 p-2">
+                        <% const leaveDate = moment(data[i].leave_date); 
+                            let formattedDate = leaveDate.format("dddd, MMMM Do YYYY"); 
+                            if (leaveDate.day() === 6) { 
+                                formattedDate += ' *'; 
+                            } %>
+                        <%= formattedDate %>
+                    </td>
+                    <td class="border border-gray-300 p-2"><%= data[i].Leave.leave_desc %></td>
+                </tr>
+                <% } %>
             </tbody>
         </table>
 
-        <div class="footer">
-            <p><b>Total number of leaves :: <%= totalRecords %></b></p>
-            <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %>
-            </p>
+        <div class="text-center mt-6 text-sm text-gray-600">
+            <p><b>Total number of leaves: <%= totalRecords %></b></p>
+            <p>Report Generated on: <%= moment(curdt).format("MMMM DD, YYYY") %></p>
             <p class="text-xs">© 2024 Abhishek Kumar Singh</p>
-            <p class="no-print">Print this report by using the print function in your browser.</p>
+            <p class="no-print">Print this report using the print function in your browser.</p>
         </div>
     </div>
 </body>
