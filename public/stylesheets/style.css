@@ -38,7 +38,7 @@ input[type=number]:focus {
 }
 footer {
   text-align: center;
-  padding: 3px;
+  padding: 2px;
   background-color: rgb(115, 148, 240);
   color: white;
   /* position: fixed; 
