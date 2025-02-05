@@ -26,28 +26,28 @@
         </div>
         <div class=" basis-[50%] h-2/3 flex flex-col items-center justify-center m-auto">
             <form action="/addemp/" method="POST"
-                class="bg-slate-300 flex flex-col items-center justify-center w-full sm:w-[90%] mx-4 rounded-lg">
+                class="bg-slate-400 flex flex-col items-center justify-center w-full sm:w-[90%] mx-4 rounded-lg">
                 <p class="text-green-700 text-2xl font-serif">
                     Add new employee
                 </p>
                 <input aria-label="Enter employee name" type="text" name="empname" placeholder="Employee name" required
                     autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-1 border  border-gray-200 rounded mb-2" />
+                    class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-3 px-4  border  border-gray-200 rounded mb-2" />
                 <input aria-label="Enter joining year" type="number" min="2006" name="joinyr" placeholder="Joining year"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4 h-2 border border-gray-200  rounded mb-2" />
+                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
                 <select name="cmbGender" id="cmbGender" required
-                    class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
+                    class="text-sm w-3/4 mr-3  py-3 px-4 border border-gray-200  rounded mb-2">
                     <option value="Male" selected>Male</option>
                     <option value="Female">Female</option>
                 </select>
                 <input aria-label="Enter mobile" type="number" name="txtmob" placeholder="Mobile number" required
                     min="5555555555" max="9999999999" autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
+                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
                 <input aria-label="Enter remarks" type="text" name="rmrk" placeholder="Remarks (if any)"
                     autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
+                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
 
-                <button type="submit" class="bg-green-400 py-3 w-3/4 mb-4 mr-3 hover:bg-green-600">
+                <button type="submit" class="bg-green-400 py-3 w-3/4 mb-4 mr-3 hover:bg-green-600 hover:rounded-full text-sm">
                     Submit
                 </button>
             </form>

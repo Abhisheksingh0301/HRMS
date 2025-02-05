@@ -17,8 +17,9 @@
                     <div class="mb-4">
                         <label for="txtuser" class="block text-sm font-medium text-gray-700">Username</label>
                         <select id="txtuser" name="txtuser"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none">
-                            <option value="0"> Select name</option>
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none"
+                            required>
+                            <option value=""> Select name</option>
                             <% for (var i=0; i<empdata.length; i++){ %>
                                 <option value='<%= empdata[i].emp_name %>'>
                                     <%= empdata[i].emp_name %>

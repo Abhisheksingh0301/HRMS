@@ -6,38 +6,42 @@
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
 
-
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
-        </div>
-    </section>
-    <div class="h-1/2 flex flex-col items-center justify-center m-auto">
-        <form action="/addlv/" method="POST"
-            class="bg-slate-300 flex flex-col justify-center items-center  w-full sm:w-[80%] mx-4 rounded-lg">
-            <p class="text-green-700 text-2xl font-serif">
-                Add leave category
-            </p>
-            <input aria-label="Enter leave abb" type="text" name="lvabb" placeholder="Leave abb" required
-                autocomplete="off"
-                class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-4 px-4 h-2 border  border-gray-200 rounded mb-2" />
-            <input aria-label="Enter leave description" type="text" name="lvdesc" placeholder="Leave description"
-                required autocomplete="off"
-                class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
-            <input aria-label="Leave alloted" type="number" name="lvallot" min="3" max="16" placeholder="Leave alloted"
-                required autocomplete="off"
-                class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
-            <input aria-label="Enter remarks" type="text" name="lvrmrk" placeholder="Remarks (if any)"
-                autocomplete="off"
-                class="text-sm text-gray-base w-3/4 mr-3  py-4 px-4 h-2 border border-gray-200  rounded mb-2" />
-
-            <button type="submit" class="bg-green-400 py-3 w-3/4 mb-4 hover:bg-green-600">
-                Submit
-            </button>
-        </form>
+<section class="featured">
+    <div class="content-wrapper">
+        <h1 id="myHeader" class="text-4xl">
+            <%= title %>
+        </h1>
     </div>
+</section>
 
-    <%- include('footer'); -%>
+<div class="h-2/3 flex flex-col items-center justify-center m-auto">
+    <form action="/addlv/" method="POST"
+        class="bg-slate-300 flex flex-col justify-center items-center w-full sm:w-[80%] mx-4 rounded-lg p-8">
+        <p class="text-green-700 text-2xl font-serif mb-6">
+            Add Leave Category
+        </p>
+        <!-- Input Fields -->
+        <input aria-label="Enter leave abb" type="text" name="lvabb" placeholder="Leave abbreviation" required
+            autocomplete="off"
+            class="text-sm text-gray-base w-3/4 mt-1 mr-3 py-2 px-4 border border-gray-200 rounded mb-4" />
+        
+        <input aria-label="Enter leave description" type="text" name="lvdesc" placeholder="Leave description" required
+            autocomplete="off"
+            class="text-sm text-gray-base w-3/4 mr-3 py-2 px-4 border border-gray-200 rounded mb-4" />
+        
+        <input aria-label="Leave alloted" type="number" name="lvallot" min="3" max="16" placeholder="Leave allotted"
+            required autocomplete="off"
+            class="text-sm text-gray-base w-3/4 mr-3 py-2 px-4 border border-gray-200 rounded mb-4" />
+        
+        <input aria-label="Enter remarks" type="text" name="lvrmrk" placeholder="Remarks (if any)" autocomplete="off"
+            class="text-sm text-gray-base w-3/4 mr-3 py-2 px-4 border border-gray-200 rounded mb-4" />
+
+        <!-- Submit Button -->
+        <button type="submit" class="bg-green-400 py-3 w-3/4 mb-4 hover:bg-green-600 text-white font-bold rounded">
+            Submit
+        </button>
+    </form>
+</div>
+
+<%- include('footer'); -%>
