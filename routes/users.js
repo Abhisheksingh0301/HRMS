@@ -174,7 +174,7 @@ router.post("/edit-empl", authMiddleware, async (req, res) => {
     mob: req.body.txtmob,
     remarks: req.body.rmrk
   };
-  console.log(empData);
+ // console.log(empData);
 
   try {
     await EmpMstModel.findByIdAndUpdate(req.body.id, empData).exec();
@@ -516,27 +516,20 @@ router.post('/signup', async (req, res) => {
         };
         const LogData = new LogModel(logindata);
 
-        //Hash the password
+        // Hash the password
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(LogData.password, saltRounds);
 
-        //Set the hashed password
+        // Set the hashed password
         LogData.password = hashedPassword;
 
-        //Save the new user to the Database
+        // Save the new user to the Database
         await LogData.save();
 
-        LogModel.find((err, Loglist) => {
-          if (err) {
-            console.error(err);
-          } else {
-            //console.log(Loglist);
-            res.render('login', { title: "Login form", userId: req.session.userId, empdata: Loglist });
-          }
-        }).sort({ emp_name: 1 })
+        const Loglist = await LogModel.find().sort({ emp_name: 1 });
 
+        res.render('login', { title: "Login form", userId: req.session.userId, empdata: Loglist });
 
-        // res.render('login', { title: "Login form", userId: req.session.userId });
       } else {
         res.render('hi', { title: "Password didn't match", userId: req.session.userId });
       }
@@ -545,7 +538,8 @@ router.post('/signup', async (req, res) => {
     console.log(err);
     res.status(500).send('Internal server error');
   }
-})
+});
+
 
 //Logout 
 router.get('/logout', async (req, res, next) => {
