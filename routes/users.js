@@ -544,19 +544,13 @@ router.post('/signup', async (req, res) => {
 //Logout 
 router.get('/logout', async (req, res, next) => {
   try {
-    await new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      });
-    });
+    await req.session.destroy();
     res.redirect('/');
   } catch (err) {
     next(err);
   }
 });
+
 
 
 
