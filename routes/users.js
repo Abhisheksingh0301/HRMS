@@ -174,7 +174,7 @@ router.post("/edit-empl", authMiddleware, async (req, res) => {
     mob: req.body.txtmob,
     remarks: req.body.rmrk
   };
- // console.log(empData);
+  // console.log(empData);
 
   try {
     await EmpMstModel.findByIdAndUpdate(req.body.id, empData).exec();
@@ -191,6 +191,8 @@ router.get("/attendance_entry", authMiddleware, async (req, res) => {
     const empdata = await EmpMstModel.find();
     const leavedata = await LeaveMstModel.find();
     const prm = await LogModel.find({ role: 'admin', emp_name: req.session.fullName });
+    const topattData= await AttendanceModel.find().sort({entrydt: -1}).limit(5);
+
 
     // console.log("prm variable ::::::::::::::::::::", prm.length);
 
@@ -201,7 +203,8 @@ router.get("/attendance_entry", authMiddleware, async (req, res) => {
         userId: req.session.userId,
         leavedata: leavedata,
         empdata: empdata,
-        attData: "",
+        attData: {},
+        topattData: topattData,
         moment: moment
       });
     } else {
@@ -220,40 +223,65 @@ router.get("/attendance_entry", authMiddleware, async (req, res) => {
 //ADD ATTENDANCE
 router.post("/addatt/", authMiddleware, async (req, res) => {
   try {
-    const result = await AttendanceModel.find({ emp_name: req.body.empnm, leave_date: req.body.dt }).countDocuments().exec();
-    if (result > 0) {
-      console.log('Duplicate');
-      res.render("hi", { title: "Duplicate record", userId: req.session.userId });
-    } else {
-      const lvdt = moment(req.body.dt).format('dddd');
-      if (lvdt == 'Sunday') {
-        res.render("hi", { title: "Selected date is Sunday", userId: req.session.userId });
-      } else {
-        const prm = await LogModel.findOne({ role: 'admin', emp_name: req.session.fullName }).exec();
-        if (prm) {
-          const attData = {
-            emp_name: (req.body.empnm).toUpperCase(),
-            leave_type: (req.body.lvcat).toUpperCase(),
-            leave_date: req.body.dt,
-            enteredby: (req.session.fullName).toUpperCase(),
-          };
-          const data = new AttendanceModel(attData);
-          await data.save();
+    const emp_name = req.body.empnm.toUpperCase();
+    const leave_type = req.body.lvcat.toUpperCase();
+    // Split dates and remove duplicates
+    const dates = [...new Set(req.body.dt.split(',').map(d => d.trim()))];
 
-          const empdata = await EmpMstModel.find().exec();
-          const leavedata = await LeaveMstModel.find().exec();
+    let addedDates = [];
+    let skippedDates = [];
 
-          res.render('attendance_entry', { title: "Attendance entry", leavedata: leavedata, empdata: empdata, attData: attData, moment: moment, userId: req.session.userId });
-        } else {
-          res.render("hi", { title: "You are not authorized", userId: req.session.userId });
-        }
+    for (const dt of dates) {
+      const leaveDate = new Date(dt);
+
+      // Check duplicate
+      const exists = await AttendanceModel.exists({
+        emp_name,
+        leave_date: leaveDate
+      });
+
+      if (exists) {
+        skippedDates.push(dt);
+        continue;
       }
+
+      // Save attendance
+      await new AttendanceModel({
+        emp_name,
+        leave_type,
+        leave_date: leaveDate,
+        enteredby: req.session.fullName.toUpperCase(),
+      }).save();
+
+      addedDates.push(dt);
     }
+
+    // Fetch empdata and leavedata for rendering
+    const empdata = await EmpMstModel.find();
+    const leavedata = await LeaveMstModel.find();
+    const topattData= await AttendanceModel.find().sort({entrydt: -1}).limit(5);
+    // Render page with summary
+    res.render("attendance_entry", {
+      title: "Attendance entry",
+      empdata,
+      leavedata,
+      topattData: topattData,
+      attData: {},
+      summary: {
+        added: addedDates,
+        skipped: skippedDates
+      },
+      moment,
+      userId: req.session.userId
+    });
+
   } catch (err) {
-    console.log('Error:', err);
-    res.status(500).send('Internal Server Error');
+    console.log("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
+
+
 
 
 //Access report page

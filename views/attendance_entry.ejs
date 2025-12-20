@@ -5,6 +5,9 @@
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <%- include('header'); -%>
     <section class="featured">
         <div class="content-wrapper">
@@ -35,41 +38,61 @@
                     </option>
                     <% } %>
             </select>
-            <input type="date" id="dt" name="dt" value="<%= moment(attData.leave_date).format( 'YYYY-MM-DD') %>"
-                required autofocus class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-            <button type="submit" class="bg-red-400 py-4 w-3/4 sm:w-1/2 mb-2 hover:bg-red-500 font-bold px-2 rounded-lg hover:rounded-full">
+            <input type="text" id="dt" name="dt" placeholder="Select multiple dates"
+                class="text-sm w-3/4 mr-3 py-4 px-4 border border-gray-200 rounded mb-2" required>
+
+
+            <button type="submit"
+                class="bg-red-400 py-4 w-3/4 sm:w-1/2 mb-2 hover:bg-red-500 font-bold px-2 rounded-lg hover:rounded-full">
                 Submit
             </button>
         </form>
+        <% if(topattData && topattData.length> 0){ %>
+            <table class="table-auto border mt-5">
+                <tr>
+                    <th colspan="4" class="py-2 px-4 border-b text-sm">Last 5 Entries</th>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 border-b text-sm">Emp name</th>
+                    <th class="py-2 px-4 border-b text-sm">Leave type</th>
+                    <th class="py-2 px-4 border-b text-sm">Leave date</th>
+                    <th class="py-2 px-4 border-b text-sm">Entry date</th>
+                </tr>
 
-        <% if(attData){ %>
-            <table class="table-auto border">
-                <tr>
-                    <th colspan="4" class="py-3 px-4 border-b">Last entry:</th>
-                </tr>
-                <tr>
-                    <th class="py-2 px-4 border-b">Emp name</th>
-                    <th class="py-2 px-4 border-b">Leave type</th>
-                    <th class="py-2 px-4 border-b">Leave date</th>
-                    <th class="py-2 px-4 border-b">Entry date</th>
-                </tr>
-                <tr>
-                    <td>
-                        <%= attData.emp_name %>
-                    </td>
-                    <td>
-                        <%= attData.leave_type %>
-                    </td>
-                    <td>
-                        <%= moment(attData.leave_date).format( 'DD-MMM-YYYY' ) %>
-                    </td>
-                    <td>
-                        <%= moment(attData.entrydt).format( 'DD-MMM-YYYY hh:mm:ss A' ) %>
-                    </td>
-                </tr>
+                <% topattData.forEach(function(att){ %>
+                    <tr>
+                        <td class="py-2 px-4 border-b text-sm">
+                            <%= att.emp_name %>
+                        </td>
+                        <td class="py-2 px-4 border-b text-sm">
+                            <%= att.leave_type %>
+                        </td>
+                        <td class="py-2 px-4 border-b text-sm">
+                            <%= moment(att.leave_date).format('DD-MMM-YYYY') %>
+                        </td>
+                        <td class="py-2 px-4 border-b text-sm">
+                            <%= moment(att.entrydt).format('DD-MMM-YYYY hh:mm:ss A') %>
+                        </td>
+                    </tr>
+                    <% }); %>
             </table>
             <% } %>
+
 
     </div>
 
     <%- include('footer'); -%>
+
+        <script>
+            flatpickr("#dt", {
+                mode: "multiple",
+                dateFormat: "Y-m-d",
+
+                disable: [
+                    function (date) {
+                        // 0 = Sunday
+                        return date.getDay() === 0;
+                    }
+                ]
+            });
+        </script>
