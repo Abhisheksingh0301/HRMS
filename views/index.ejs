@@ -1,45 +1,119 @@
-<title>
-    <%= title %>
-</title>
+<title><%= title %></title>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
-<link rel='stylesheet' href='/stylesheets/style.css'>
-<script src="/js/jquery.js"></script>
+<link rel="stylesheet" href="/stylesheets/style.css">
 
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
 
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
+
+<section class="h-screen bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+
+    <div class="max-w-7xl mx-auto h-full px-6 py-4 flex flex-col">
+
+        <!-- PAGE TITLE -->
+        <div class="text-center mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">
                 <%= title %>
             </h1>
-        </div>
-    </section>
-    <div class="max-w-fit md:py-[80] py-5 flex mx-4 sm:flex-row flex-col bg-yellow-200 justify-around rounded-lg">
-        <div class="basis-[30%] pb-5 mx-auto my-2 overflow-hidden px-10">
-            <img src="/images/hrm-banner.jpg" alt="No image !!!!"
-                class=" w-80 rounded-lg h-80 hover:scale-125 duration-1000">
-        </div>
-        <div class="basis-[70%] my-2 mx-10">
-            <p class="py-1 text-justify font-semibold font-serif text-teal-800">
-                An Attendance Management System (AMS) is integral to managing leaves within a Human Resource Management
-                System (HRMS). It efficiently tracks employee attendance, including various types of leave such as
-                casual leave, summer recess, etc.
-            </p>
-            <p class="py-3 text-justify font-semibold font-serif text-teal-800">
-                The system maintains a comprehensive record of leave balances and history, ensuring that employees are
-                aware of their available leave entitlements and helping admins to enforce leave policies.
-            </p>
-            <p class="py-3 text-justify font-semibold font-serif text-teal-800">
-                Additionally, the AMS provides real-time reporting and analytics, which helps admins to monitor
-                leave patterns, identify potential issues, and plan for staffing needs. This data-driven approach
-                facilitates better workforce management and strategic planning. Overall, an AMS streamlines leave
-                management processes, enhances transparency, and supports compliance with organizational policies and
-                contributing to a more efficient and organized HR function.
+
+            <p class="text-gray-600 mt-2 text-sm md:text-base">
+                Smart attendance and leave management solution
             </p>
         </div>
+
+        <!-- MAIN CARD -->
+        <div class="flex-1 bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+            <div class="grid lg:grid-cols-2 h-full">
+
+                <!-- IMAGE SIDE -->
+                <div class="relative h-full">
+                    <img 
+                        src="/images/hrm-banner.jpg"
+                        alt="HRM Banner"
+                        class="w-full h-full object-cover"
+                    >
+
+                    <div class="absolute inset-0 bg-black/30"></div>
+
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <h2 class="text-2xl font-bold">
+                            HRMS & AMS
+                        </h2>
+
+                        <p class="text-sm mt-2 opacity-90">
+                            Simplifying workforce operations
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CONTENT SIDE -->
+                <div class="p-6 lg:p-8 flex flex-col justify-center">
+
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">
+                        Attendance Management System
+                    </h2>
+
+                    <div class="space-y-3 text-gray-700 leading-7 text-sm">
+
+                        <p>
+                            The Attendance Management System (AMS) helps organizations efficiently manage employee attendance, leave records, and working schedules.
+                        </p>
+
+                        <p>
+                            It provides accurate leave tracking, maintains attendance history, and supports HR teams in enforcing organizational policies.
+                        </p>
+
+                        <p>
+                            Real-time analytics and reporting help improve workforce planning, transparency, and operational efficiency.
+                        </p>
+
+                    </div>
+
+                    <!-- FEATURES -->
+                    <div class="grid grid-cols-2 gap-3 mt-6">
+
+                        <div class="bg-slate-100 rounded-xl p-3 flex items-center gap-3">
+                            <i class="fa-solid fa-calendar-check text-blue-600"></i>
+                            <span class="text-sm font-medium">
+                                Leave Tracking
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-100 rounded-xl p-3 flex items-center gap-3">
+                            <i class="fa-solid fa-chart-line text-green-600"></i>
+                            <span class="text-sm font-medium">
+                                Analytics
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-100 rounded-xl p-3 flex items-center gap-3">
+                            <i class="fa-solid fa-users text-purple-600"></i>
+                            <span class="text-sm font-medium">
+                                Employees
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-100 rounded-xl p-3 flex items-center gap-3">
+                            <i class="fa-solid fa-shield-halved text-red-600"></i>
+                            <span class="text-sm font-medium">
+                                Compliance
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
+</section>
 
-    <%- include('footer'); -%>
+<%- include('footer'); -%>
