@@ -632,3 +632,151 @@ footer {
     }
 
 }
+
+/* =========================================================
+   TABLE IMPROVEMENTS
+   ========================================================= */
+
+table {
+    border-spacing: 0;
+}
+
+thead th {
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+tbody tr {
+    transition: var(--transition);
+}
+
+tbody tr:hover {
+    transform: scale(1.002);
+}
+
+/* =========================================================
+   FEATURED SECTION
+   ========================================================= */
+
+.featured {
+    padding: 30px 0;
+}
+
+.featured .content-wrapper {
+    text-align: center;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.btn i {
+    margin-right: 6px;
+}
+
+/* =========================================================
+   RESPONSIVE TABLE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    table {
+        min-width: 700px;
+    }
+
+    .flex-between {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
+
+/* =========================================================
+   FORM LABELS
+   ========================================================= */
+
+.form-label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: 600;
+
+    color: var(--dark);
+
+    font-size: 0.95rem;
+
+}
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+
+    display: inline-block;
+
+    background: #dbeafe;
+
+    color: var(--primary);
+
+    padding: 6px 12px;
+
+    border-radius: 30px;
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+}
+
+/* =========================================================
+   FLATPICKR CUSTOMIZATION
+   ========================================================= */
+
+.flatpickr-input {
+
+    background: white !important;
+
+}
+
+.flatpickr-calendar {
+
+    border-radius: 14px !important;
+
+    box-shadow: var(--shadow-lg) !important;
+
+    border: none !important;
+
+    overflow: hidden;
+
+}
+
+.flatpickr-day.selected {
+
+    background: var(--primary) !important;
+
+    border-color: var(--primary) !important;
+
+}
+
+.flatpickr-day:hover {
+
+    background: #dbeafe !important;
+
+}
+
+/* =========================================================
+   FORM RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    form .grid-3 {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}

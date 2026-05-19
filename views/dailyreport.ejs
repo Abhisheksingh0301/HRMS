@@ -1,49 +1,138 @@
 <title>
     <%= title %>
 </title>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
+
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
-        </div>
-    </section>
-    <div class="flex flex-col  items-center justify-center my-5">
-        <div
-            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[80%] mx-4 rounded-lg m-auto">
-            <form action="/individualrpt/" method="POST" target="_blank"
-                class="sm:flex sm:flex-col flex flex-col justify-around items-center  w-full mx-4 rounded-lg m-auto">
-                <div class="flex flex-row  items-center w-full ">
-                    <input type="date" id="stdt" name="stdt" required
-                        class="text-sm w-2/3 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                    <input type="date" id="enddt" name="enddt" required
-                        class="text-sm w-2/3 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                    <select id="nm" name="empnm" onchange="this.form.submit()"
-                        class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2 font-serif">
-                        <option value="0"> Select name</option>
-                        <% for (var i=0; i<empdata.length; i++){ %>
-                            <option value='<%= empdata[i].emp_name %>'>
-                                <%= empdata[i].emp_name %>
-                            </option>
-                            <% } %>
-                    </select>
-                </div>
-                <div class="flex flex-row  items-center justify-center gap-2 mt-6">
-                    <% lvdata.forEach(item=> { %>
-                        <input type="checkbox" id="<%= item._id %>" name="chkleaves" value="<%= item.leave_abb %>"
-                            checked>
-                        <label class="mr-5 font-serif" for="<%= item._id %>">
-                            <%= item.leave_desc %>
-                        </label>
-                        <% }) %>
-                </div>
-            </form>
-        </div>
+
+<!-- HEADER -->
+<section class="bg-gradient-to-r from-purple-600 to-indigo-700 py-4 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+
+            <i class="fa fa-chart-bar"></i>
+
+            <%= title %>
+
+        </h1>
+
+        <p class="text-purple-100 text-sm mt-1">
+            Individual Employee Attendance Report
+        </p>
+
     </div>
 
-    <%- include('footer'); -%>
+</section>
+
+<!-- MAIN -->
+<div class="max-w-5xl mx-auto px-4 py-6">
+
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+
+        <form action="/individualrpt/" method="POST" target="_blank"
+            class="space-y-6">
+
+            <!-- TOP ROW -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+
+                <!-- START DATE -->
+                <div>
+
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        Start Date
+                    </label>
+
+                    <input type="date" id="stdt" name="stdt" required
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-500 outline-none">
+
+                </div>
+
+                <!-- END DATE -->
+                <div>
+
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        End Date
+                    </label>
+
+                    <input type="date" id="enddt" name="enddt" required
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-500 outline-none">
+
+                </div>
+
+                <!-- EMPLOYEE -->
+                <div>
+
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        Employee
+                    </label>
+
+                    <select id="nm" name="empnm" onchange="this.form.submit()"
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-purple-200 focus:border-purple-500 outline-none">
+
+                        <option value="0">Select employee</option>
+
+                        <% for (var i=0; i<empdata.length; i++){ %>
+
+                        <option value='<%= empdata[i].emp_name %>'>
+
+                            <%= empdata[i].emp_name %>
+
+                        </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- LEAVE FILTERS -->
+            <div class="border-t border-slate-200 pt-4">
+
+                <h3 class="text-sm font-semibold text-slate-700 mb-3">
+                    Filter Leave Types
+                </h3>
+
+                <div class="flex flex-wrap gap-3">
+
+                    <% lvdata.forEach(item => { %>
+
+                    <label class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-100 transition text-sm">
+
+                        <input
+                            type="checkbox"
+                            id="<%= item._id %>"
+                            name="chkleaves"
+                            value="<%= item.leave_abb %>"
+                            checked
+                            class="accent-purple-600">
+
+                        <span class="text-slate-700 font-medium">
+
+                            <%= item.leave_desc %>
+
+                        </span>
+
+                    </label>
+
+                    <% }) %>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<%- include('footer'); -%>

@@ -1,33 +1,155 @@
 <title>
     <%= title %>
 </title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
-<script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+
 <link rel='stylesheet' href='/stylesheets/style.css'>
-<script src="/js/jquery.js"></script>
+
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
+
+<!-- PAGE HEADER -->
+<section class="bg-gradient-to-r from-indigo-600 to-blue-700 py-4 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+
+                    <i class="fa fa-chart-line"></i>
+
+                    <%= title %>
+
+                </h1>
+
+                <p class="text-blue-100 text-sm mt-1">
+                    Attendance Analytics & Reporting Dashboard
+                </p>
+
+            </div>
+
+            <div class="hidden md:flex bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-semibold">
+
+                <i class="fa fa-file-alt mr-2"></i>
+                HRMS Reports
+
+            </div>
+
         </div>
-    </section>
-    <div class="flex flex-col  items-center justify-center my-5">
-        <div
-            class="sm:flex sm:flex-row flex flex-col justify-around items-center  w-full sm:w-[80%] mx-4 rounded-lg m-auto">
-            <a href="/dailyreport">
-                <figure>
-                    <img src="/images/daily-report.jpg" alt="No image" class="w-80 h-80 rounded-full">
-                    <figcaption class="grid justify-items-center text-xl hover:decoration-red-700 font-serif hover:underline">Individual attendance report</figcaption>
-                </figure>
-            </a>
-            <a href="/summaryreport">
-                <figure>
-                    <img src="/images/monthly-report.jpg" alt="No image" class="w-80 h-80 rounded-full">
-                    <figcaption class="grid justify-items-center text-xl hover:decoration-red-700 font-serif hover:underline">Summarised attendance report</figcaption>
-                </figure>
-            </a>
-        </div>
+
     </div>
-    <%- include('footer'); -%>
+
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- REPORT CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- DAILY REPORT -->
+        <a href="/dailyreport"
+            class="group bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition duration-300">
+
+            <!-- IMAGE -->
+            <div class="relative overflow-hidden">
+
+                <img src="/images/daily-report.jpg"
+                    alt="Daily Report"
+                    class="w-full h-72 object-cover group-hover:scale-105 transition duration-500">
+
+                <!-- OVERLAY -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                <!-- ICON -->
+                <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-3 rounded-xl">
+
+                    <i class="fa fa-user-clock text-xl"></i>
+
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="p-6">
+
+                <h2 class="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition">
+
+                    Individual Attendance Report
+
+                </h2>
+
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+
+                    View detailed employee-wise attendance reports with leave and presence information.
+
+                </p>
+
+                <div class="mt-5 flex items-center text-blue-600 font-semibold text-sm">
+
+                    Open Report
+
+                    <i class="fa fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+
+                </div>
+
+            </div>
+
+        </a>
+
+        <!-- SUMMARY REPORT -->
+        <a href="/summaryreport"
+            class="group bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition duration-300">
+
+            <!-- IMAGE -->
+            <div class="relative overflow-hidden">
+
+                <img src="/images/monthly-report.jpg"
+                    alt="Summary Report"
+                    class="w-full h-72 object-cover group-hover:scale-105 transition duration-500">
+
+                <!-- OVERLAY -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                <!-- ICON -->
+                <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-3 rounded-xl">
+
+                    <i class="fa fa-chart-pie text-xl"></i>
+
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="p-6">
+
+                <h2 class="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition">
+
+                    Summarised Attendance Report
+
+                </h2>
+
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+
+                    Analyze monthly attendance summaries and department-wise employee statistics.
+
+                </p>
+
+                <div class="mt-5 flex items-center text-blue-600 font-semibold text-sm">
+
+                    Open Report
+
+                    <i class="fa fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+
+                </div>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+<%- include('footer'); -%>

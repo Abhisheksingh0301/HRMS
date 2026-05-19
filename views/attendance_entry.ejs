@@ -1,98 +1,312 @@
 <title>
     <%= title %>
 </title>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
-<link rel='stylesheet' href='/stylesheets/style.css'>
-<script src="/js/jquery.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel='stylesheet' href='/stylesheets/style.css'>
+<script src="/js/jquery.js"></script>
 
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
+
+<!-- PAGE HEADER -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-4 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+
+                    <i class="fa fa-calendar-check-o"></i>
+
+                    <%= title %>
+
+                </h1>
+
+                <p class="text-blue-100 text-sm mt-1">
+                    Employee Attendance & Leave Management
+                </p>
+
+            </div>
+
+            <div class="hidden md:flex bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-semibold">
+
+                <i class="fa fa-users mr-2"></i>
+                HRMS Portal
+
+            </div>
+
         </div>
-    </section>
-    <div class=" flex flex-col  items-center justify-center m-auto mt-5">
-        <form action="/addatt/" method="POST"
-            class="bg-slate-300 sm:flex sm:flex-row flex flex-col justify-center items-center  w-full sm:w-[80%] mx-4 rounded-lg">
-
-            <select id="nm" name="empnm" class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                <option value="0"> Select name</option>
-                <% for (var i=0; i<empdata.length; i++){ %>
-                    <option value='<%= empdata[i].emp_name %>' <% if(empdata[i].emp_name==attData.emp_name ){ %>
-                        selected <% } %>>
-                            <%= empdata[i].emp_name %>
-                    </option>
-                    <% } %>
-            </select>
-            <select id="lv" name="lvcat" class="text-sm w-3/4 mr-3  py-4 px-4 border border-gray-200  rounded mb-2">
-                <option value="0"> Select leave</option>
-                <% for (var i=0; i<leavedata.length; i++){ %>
-                    <option value='<%= leavedata[i].leave_abb %>' <% if(leavedata[i].leave_abb==attData.leave_type ){ %>
-                        selected <% } %>>
-                            <%= leavedata[i].leave_abb %>
-                    </option>
-                    <% } %>
-            </select>
-            <input type="text" id="dt" name="dt" placeholder="Select multiple dates"
-                class="text-sm w-3/4 mr-3 py-4 px-4 border border-gray-200 rounded mb-2" required>
-
-
-            <button type="submit"
-                class="bg-red-400 py-4 w-3/4 sm:w-1/2 mb-2 hover:bg-red-500 font-bold px-2 rounded-lg hover:rounded-full">
-                Submit
-            </button>
-        </form>
-        <% if(topattData && topattData.length> 0){ %>
-            <table class="table-auto border mt-5">
-                <tr>
-                    <th colspan="4" class="py-2 px-4 border-b text-sm">Last 5 Entries</th>
-                </tr>
-                <tr>
-                    <th class="py-2 px-4 border-b text-sm">Emp name</th>
-                    <th class="py-2 px-4 border-b text-sm">Leave type</th>
-                    <th class="py-2 px-4 border-b text-sm">Leave date</th>
-                    <th class="py-2 px-4 border-b text-sm">Entry date</th>
-                </tr>
-
-                <% topattData.forEach(function(att){ %>
-                    <tr>
-                        <td class="py-2 px-4 border-b text-sm">
-                            <%= att.emp_name %>
-                        </td>
-                        <td class="py-2 px-4 border-b text-sm">
-                            <%= att.leave_type %>
-                        </td>
-                        <td class="py-2 px-4 border-b text-sm">
-                            <%= moment(att.leave_date).format('DD-MMM-YYYY') %>
-                        </td>
-                        <td class="py-2 px-4 border-b text-sm">
-                            <%= moment(att.entrydt).format('DD-MMM-YYYY hh:mm:ss A') %>
-                        </td>
-                    </tr>
-                    <% }); %>
-            </table>
-            <% } %>
-
 
     </div>
 
-    <%- include('footer'); -%>
+</section>
 
-        <script>
-            flatpickr("#dt", {
-                mode: "multiple",
-                dateFormat: "Y-m-d",
+<!-- MAIN CONTENT -->
+<div class="max-w-7xl mx-auto px-4 py-5">
 
-                disable: [
-                    function (date) {
-                        // 0 = Sunday
-                        return date.getDay() === 0;
-                    }
-                ]
-            });
-        </script>
+    <!-- FORM CARD -->
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200">
+
+        <!-- CARD HEADER -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+
+            <div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    Add Attendance / Leave
+                </h2>
+
+                <p class="text-slate-500 text-sm">
+                    Fill attendance details
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <form action="/addatt/" method="POST" class="p-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+                <!-- EMPLOYEE -->
+                <div>
+
+                    <label class="block mb-2 text-sm font-semibold text-slate-700">
+                        Employee
+                    </label>
+
+                    <select
+                        id="nm"
+                        name="empnm"
+                        required
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none">
+
+                        <option value="0">Select</option>
+
+                        <% for (var i=0; i<empdata.length; i++){ %>
+
+                        <option
+                            value='<%= empdata[i].emp_name %>'
+                            <% if(empdata[i].emp_name==attData.emp_name ){ %>
+                            selected
+                            <% } %>>
+
+                            <%= empdata[i].emp_name %>
+
+                        </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+                <!-- LEAVE -->
+                <div>
+
+                    <label class="block mb-2 text-sm font-semibold text-slate-700">
+                        Leave Type
+                    </label>
+
+                    <select
+                        id="lv"
+                        name="lvcat"
+                        required
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none">
+
+                        <option value="0">Select</option>
+
+                        <% for (var i=0; i<leavedata.length; i++){ %>
+
+                        <option
+                            value='<%= leavedata[i].leave_abb %>'
+                            <% if(leavedata[i].leave_abb==attData.leave_type ){ %>
+                            selected
+                            <% } %>>
+
+                            <%= leavedata[i].leave_abb %>
+
+                        </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+                <!-- DATE -->
+                <div>
+
+                    <label class="block mb-2 text-sm font-semibold text-slate-700">
+                        Dates
+                    </label>
+
+                    <input
+                        type="text"
+                        id="dt"
+                        name="dt"
+                        placeholder="Select dates"
+                        required
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none">
+
+                </div>
+
+                <!-- BUTTON -->
+                <div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-lg shadow transition duration-200 text-sm">
+
+                        <i class="fa fa-save mr-2"></i>
+
+                        Submit
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- TABLE -->
+    <% if(topattData && topattData.length > 0){ %>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200 mt-5 overflow-hidden">
+
+        <!-- HEADER -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+
+            <div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    Recent Entries
+                </h2>
+
+                <p class="text-slate-500 text-sm">
+                    Last 5 attendance records
+                </p>
+
+            </div>
+
+            <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-semibold">
+
+                Live Records
+
+            </span>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full text-sm">
+
+                <thead class="bg-blue-600 text-white">
+
+                    <tr>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Employee
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Leave
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Leave Date
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Entry Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-200 bg-white">
+
+                    <% topattData.forEach(function(att){ %>
+
+                    <tr class="hover:bg-blue-50 transition">
+
+                        <td class="px-5 py-3 font-semibold text-slate-800">
+
+                            <%= att.emp_name %>
+
+                        </td>
+
+                        <td class="px-5 py-3">
+
+                            <span class="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold">
+
+                                <%= att.leave_type %>
+
+                            </span>
+
+                        </td>
+
+                        <td class="px-5 py-3 text-slate-600">
+
+                            <%= moment(att.leave_date).format('DD-MMM-YYYY') %>
+
+                        </td>
+
+                        <td class="px-5 py-3 text-slate-600">
+
+                            <%= moment(att.entrydt).format('DD-MMM-YYYY hh:mm A') %>
+
+                        </td>
+
+                    </tr>
+
+                    <% }); %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <% } %>
+
+</div>
+
+<%- include('footer'); -%>
+
+<script>
+
+    flatpickr("#dt", {
+
+        mode: "multiple",
+
+        dateFormat: "Y-m-d",
+
+        disable: [
+
+            function (date) {
+
+                return date.getDay() === 0;
+
+            }
+
+        ]
+
+    });
+
+</script>

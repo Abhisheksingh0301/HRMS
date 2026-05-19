@@ -1,56 +1,138 @@
 <title>
     <%= title %>
 </title>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
 
-
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
-        </div>
-    </section>
-    <div class="max-w-fit md:py-[20] py-3 flex mx-4 sm:flex-row flex-col justify-around">
-        <div class="basis-[50%] pb-5 mx-auto overflow-hidden">
-            <p class="py-3 text-justify  text-3xl font-serif hover:text-blue-700">
-                Adding employee names to an attendance management system improves its accuracy and efficiency.
-                Personalized records help in generating precise reports and understanding attendance patterns better.
-                Overall, having employee names in the system helps management to handle attendance more effectively,
-                ensuring smooth operations and accurate record-keeping.
-            </p>
-        </div>
-        <div class=" basis-[50%] h-2/3 flex flex-col items-center justify-center m-auto">
-            <form action="/addemp/" method="POST"
-                class="bg-slate-400 flex flex-col items-center justify-center w-full sm:w-[90%] mx-4 rounded-lg">
-                <p class="text-green-700 text-2xl font-serif">
-                    Add new employee
-                </p>
-                <input aria-label="Enter employee name" type="text" name="empname" placeholder="Employee name" required
-                    autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mt-3 mr-3 py-3 px-4  border  border-gray-200 rounded mb-2" />
-                <input aria-label="Enter joining year" type="number" min="2006" name="joinyr" placeholder="Joining year"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
-                <select name="cmbGender" id="cmbGender" required
-                    class="text-sm w-3/4 mr-3  py-3 px-4 border border-gray-200  rounded mb-2">
-                    <option value="Male" selected>Male</option>
-                    <option value="Female">Female</option>
-                </select>
-                <input aria-label="Enter mobile" type="number" name="txtmob" placeholder="Mobile number" required
-                    min="5555555555" max="9999999999" autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
-                <input aria-label="Enter remarks" type="text" name="rmrk" placeholder="Remarks (if any)"
-                    autocomplete="off"
-                    class="text-sm text-gray-base w-3/4 mr-3  py-3 px-4  border border-gray-200  rounded mb-2" />
 
-                <button type="submit" class="bg-green-400 py-3 w-3/4 mb-4 mr-3 hover:bg-green-600 hover:rounded-full text-sm">
-                    Submit
-                </button>
-            </form>
-        </div>
+<!-- HEADER -->
+<section class="bg-gradient-to-r from-emerald-600 to-green-700 py-3 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <h1 class="text-xl font-bold text-white flex items-center gap-2">
+
+            <i class="fa fa-user-plus"></i>
+
+            Add Employee
+
+        </h1>
+
     </div>
-    <%- include('footer'); -%>
+
+</section>
+
+<!-- MAIN -->
+<div class="max-w-6xl mx-auto px-4 py-3">
+
+    <div class="bg-white rounded-xl shadow-md border border-slate-200 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+
+        <!-- LEFT INFO (COMPACT) -->
+        <div class="p-5 flex items-center bg-slate-50">
+
+            <p class="text-sm leading-relaxed text-slate-700">
+
+                Add employees to keep attendance records accurate and organized.
+                This helps generate precise reports, track patterns, and improve HR efficiency.
+
+            </p>
+
+        </div>
+
+        <!-- RIGHT FORM -->
+        <div class="p-4">
+
+            <form action="/addemp/" method="POST" class="space-y-3">
+
+                <!-- NAME -->
+                <div class="relative">
+
+                    <input type="text" name="empname" required
+                        class="peer w-full border border-slate-300 rounded-lg px-3 pt-5 pb-2 text-sm focus:border-emerald-500 outline-none"
+                        placeholder=" ">
+
+                    <label class="absolute left-3 top-1 text-xs text-slate-500">
+                        Employee Name
+                    </label>
+
+                </div>
+
+                <!-- JOIN YEAR -->
+                <div class="relative">
+
+                    <input type="number" name="joinyr" min="2006"
+                        class="peer w-full border border-slate-300 rounded-lg px-3 pt-5 pb-2 text-sm"
+                        placeholder=" ">
+
+                    <label class="absolute left-3 top-1 text-xs text-slate-500">
+                        Joining Year
+                    </label>
+
+                </div>
+
+                <!-- GENDER -->
+                <div class="relative">
+
+                    <select name="cmbGender"
+                        class="peer w-full border border-slate-300 rounded-lg px-3 pt-5 pb-2 text-sm">
+
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+
+                    </select>
+
+                    <label class="absolute left-3 top-1 text-xs text-slate-500">
+                        Gender
+                    </label>
+
+                </div>
+
+                <!-- MOBILE -->
+                <div class="relative">
+
+                    <input type="number" name="txtmob" required min="5555555555" max="9999999999"
+                        class="peer w-full border border-slate-300 rounded-lg px-3 pt-5 pb-2 text-sm"
+                        placeholder=" ">
+
+                    <label class="absolute left-3 top-1 text-xs text-slate-500">
+                        Mobile Number
+                    </label>
+
+                </div>
+
+                <!-- REMARKS -->
+                <div class="relative">
+
+                    <input type="text" name="rmrk"
+                        class="peer w-full border border-slate-300 rounded-lg px-3 pt-5 pb-2 text-sm"
+                        placeholder=" ">
+
+                    <label class="absolute left-3 top-1 text-xs text-slate-500">
+                        Remarks (optional)
+                    </label>
+
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-sm transition">
+
+                    <i class="fa fa-save mr-1"></i>
+                    Save Employee
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('footer'); -%>

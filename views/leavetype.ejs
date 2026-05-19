@@ -1,60 +1,200 @@
 <title>
     <%= title %>
 </title>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
 <link rel='stylesheet' href='/stylesheets/style.css'>
+
 <script src="/js/jquery.js"></script>
 
-
 <%- include('header'); -%>
-    <section class="featured">
-        <div class="content-wrapper">
-            <h1 id="myHeader" class="text-4xl">
-                <%= title %>
-            </h1>
+
+<!-- PAGE HEADER -->
+<section class="bg-gradient-to-r from-cyan-600 to-blue-700 py-4 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+
+                    <i class="fa fa-calendar"></i>
+
+                    <%= title %>
+
+                </h1>
+
+                <p class="text-cyan-100 text-sm mt-1">
+                    Leave Management Dashboard
+                </p>
+
+            </div>
+
+            <div class="hidden md:flex bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-semibold">
+
+                <i class="fa fa-briefcase mr-2"></i>
+                HRMS Portal
+
+            </div>
+
         </div>
-    </section>
-    <div class="h-auto flex flex-col items-center justify-center m-auto my-2">
-        <% if(lvlist.length>0){ %>
-            <table class="table-auto border">
-                <thead>
-                    <tr>
-                        <th>Leave abb</th>
-                        <th>Leave desc</th>
-                        <th>Alloted</th>
-                        <th>Remarks</th>
-                    </tr>
-                </thead>
-                <tbody id="myTable" class="bg-cyan-100">
-
-                    <% for (var i=0; i<lvlist.length; i++){ %>
-                        <tr class="hover:bg-sky-200">
-                            <td>
-                                <%= lvlist[i].leave_abb %>
-                            </td>
-                            <td>
-                                <%= lvlist[i].leave_desc %>
-                            </td>
-                            <td>
-                                <%= lvlist[i].leave_alloted %>
-                            </td>
-                            <td>
-                                <%= lvlist[i].remarks %>
-                            </td>
-                        </tr>
-                        <% } %>
-
-                </tbody>
-                <tr>
-                    <td colspan="4" class="py-3 px-2"> <a href="./leaves" class="bg-blue-400 hover:bg-blue-600 hover:rounded-full
-                        px-3 py-3 rounded-lg">Add
-                            new records</a></td>
-                </tr>
-            </table>
-            <% } else { %>
-                <h3 style="font:bold;color: darkred;font-family: monospace;">No records found</h3>
-                <% } %>
 
     </div>
-    <%- include('footer'); -%>
+
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="max-w-7xl mx-auto px-4 py-5">
+
+    <% if(lvlist.length > 0){ %>
+
+    <!-- TABLE CARD -->
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+
+        <!-- CARD HEADER -->
+        <div class="px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+            <div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    Leave Categories
+                </h2>
+
+                <p class="text-slate-500 text-sm">
+                    Manage employee leave configurations
+                </p>
+
+            </div>
+
+            <a href="./leaves"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition duration-200 w-fit">
+
+                <i class="fa fa-plus mr-2"></i>
+
+                Add Leave
+
+            </a>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full text-sm">
+
+                <thead class="bg-blue-600 text-white">
+
+                    <tr>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Leave Abb
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Leave Description
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Allotted
+                        </th>
+
+                        <th class="px-5 py-3 text-left font-semibold">
+                            Remarks
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-200 bg-white">
+
+                    <% for (var i=0; i<lvlist.length; i++){ %>
+
+                    <tr class="hover:bg-cyan-50 transition duration-200">
+
+                        <!-- ABB -->
+                        <td class="px-5 py-3">
+
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
+
+                                <%= lvlist[i].leave_abb %>
+
+                            </span>
+
+                        </td>
+
+                        <!-- DESC -->
+                        <td class="px-5 py-3 font-medium text-slate-800">
+
+                            <%= lvlist[i].leave_desc %>
+
+                        </td>
+
+                        <!-- ALLOTED -->
+                        <td class="px-5 py-3 text-slate-600">
+
+                            <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
+
+                                <%= lvlist[i].leave_alloted %> Days
+
+                            </span>
+
+                        </td>
+
+                        <!-- REMARKS -->
+                        <td class="px-5 py-3 text-slate-600">
+
+                            <%= lvlist[i].remarks %>
+
+                        </td>
+
+                    </tr>
+
+                    <% } %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <% } else { %>
+
+    <!-- EMPTY STATE -->
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-10 text-center">
+
+        <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-5">
+
+            <i class="fa fa-folder-open text-3xl"></i>
+
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-800">
+            No Leave Records Found
+        </h2>
+
+        <p class="text-slate-500 mt-2 mb-6">
+            Start by adding a new leave category.
+        </p>
+
+        <a href="./leaves"
+            class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow transition duration-200">
+
+            <i class="fa fa-plus mr-2"></i>
+
+            Add Leave Record
+
+        </a>
+
+    </div>
+
+    <% } %>
+
+</div>
+
+<%- include('footer'); -%>
