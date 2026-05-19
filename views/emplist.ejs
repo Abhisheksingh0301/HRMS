@@ -4,94 +4,105 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 <script src="https://kit.fontawesome.com/00d76a4bef.js" crossorigin="anonymous"></script>
+
 <link rel='stylesheet' href='/stylesheets/style.css'>
 <script src="/js/jquery.js"></script>
 
 <%- include('header'); -%>
 
-<section class="featured">
-    <div class="container">
-        <div class="content-wrapper">
-            <h1 id="myHeader">
+<!-- PAGE HEADER -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-4 shadow-md">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="text-center">
+
+            <h1 class="text-2xl font-bold text-white flex items-center justify-center gap-3">
                 <i class="fa fa-users"></i>
                 <%= title %>
             </h1>
-            <p style="text-align:center; color: var(--text-light); margin-top:8px;">
+
+            <p class="text-blue-100 text-sm mt-1">
                 Employee Management Dashboard
             </p>
+
         </div>
+
     </div>
+
 </section>
 
-<div class="container" style="padding: 30px 0 60px;">
+<!-- MAIN CONTENT -->
+<div class="max-w-7xl mx-auto px-4 py-6">
 
     <% if(employeelist.length > 0){ %>
 
-    <div class="card">
+    <!-- CARD -->
+    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
 
-        <!-- TOP ACTION BAR -->
-        <div class="flex-between" style="margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <!-- TOP BAR -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-5 py-4 border-b border-slate-200">
 
-            <h2 style="font-size: 1.3rem;">
+            <h2 class="text-lg font-bold text-slate-800">
                 Employee Records
             </h2>
 
-            <a href="./employees" class="btn btn-primary">
+            <a href="./employees"
+                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">
+
                 <i class="fa fa-plus"></i>
                 Add Employee
+
             </a>
 
         </div>
 
         <!-- TABLE -->
-        <div style="overflow-x:auto;">
+        <div class="overflow-x-auto pb-16">
 
-            <table>
+            <table class="min-w-full text-sm">
 
-                <thead>
+                <thead class="bg-slate-100 text-slate-700">
                     <tr>
-                        <th>Name</th>
-                        <th>Joining Year</th>
-                        <th>Gender</th>
-                        <th>Mobile No</th>
-                        <th>Remarks</th>
-                        <th style="text-align:center;">Action</th>
+                        <th class="text-left px-5 py-3 font-semibold">Name</th>
+                        <th class="text-left px-5 py-3 font-semibold">Joining Year</th>
+                        <th class="text-left px-5 py-3 font-semibold">Gender</th>
+                        <th class="text-left px-5 py-3 font-semibold">Mobile No</th>
+                        <th class="text-left px-5 py-3 font-semibold">Remarks</th>
+                        <th class="text-center px-5 py-3 font-semibold">Action</th>
                     </tr>
                 </thead>
 
-                <tbody id="myTable">
+                <tbody class="divide-y divide-slate-200">
 
                     <% for (var i = 0; i < employeelist.length; i++) { %>
 
-                    <tr>
+                    <tr class="hover:bg-slate-50 transition">
 
-                        <td>
-                            <strong>
-                                <%= employeelist[i].emp_name %>
-                            </strong>
+                        <td class="px-5 py-3 font-semibold text-slate-800">
+                            <%= employeelist[i].emp_name %>
                         </td>
 
-                        <td>
+                        <td class="px-5 py-3 text-slate-600">
                             <%= employeelist[i].year_of_joining %>
                         </td>
 
-                        <td>
+                        <td class="px-5 py-3 text-slate-600">
                             <%= employeelist[i].gender %>
                         </td>
 
-                        <td>
+                        <td class="px-5 py-3 text-slate-600">
                             <%= employeelist[i].mob %>
                         </td>
 
-                        <td>
+                        <td class="px-5 py-3 text-slate-600">
                             <%= employeelist[i].remarks %>
                         </td>
 
-                        <td style="text-align:center;">
+                        <td class="px-5 py-3 text-center">
 
-                            <a href='/edit-empl/<%= employeelist[i]._id %>'
-                                class="btn btn-primary"
-                                style="padding:8px 12px; font-size:0.85rem;">
+                            <a href="/edit-empl/<%= employeelist[i]._id %>"
+                                class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
 
                                 <i class="fa fa-edit"></i>
                                 Edit
@@ -114,23 +125,25 @@
 
     <% } else { %>
 
-    <div class="card flex-center" style="flex-direction:column; padding:60px 20px;">
+    <!-- EMPTY STATE -->
+    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-10 text-center">
 
-        <i class="fa fa-folder-open"
-            style="font-size:60px; color: var(--text-light); margin-bottom:20px;">
-        </i>
+        <i class="fa fa-folder-open text-6xl text-slate-300 mb-4"></i>
 
-        <h3 style="margin-bottom:10px;">
+        <h3 class="text-lg font-bold text-slate-800 mb-2">
             No Employee Records Found
         </h3>
 
-        <p style="color: var(--text-light); margin-bottom:25px;">
+        <p class="text-slate-500 mb-6">
             Start by adding your first employee record.
         </p>
 
-        <a href="./employees" class="btn btn-primary">
+        <a href="./employees"
+            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow transition">
+
             <i class="fa fa-plus"></i>
             Add Employee
+
         </a>
 
     </div>
